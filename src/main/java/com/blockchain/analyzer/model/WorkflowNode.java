@@ -1,12 +1,14 @@
 package com.blockchain.analyzer.model;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class WorkflowNode {
 
@@ -16,9 +18,11 @@ public class WorkflowNode {
 
     private String type;
 
-    private List<String> incoming;
+    @Builder.Default
+    private List<String> incoming = new ArrayList<>();
 
-    private List<String> outgoing;
+    @Builder.Default
+    private List<String> outgoing = new ArrayList<>();
 
     private boolean externalInteraction;
 
@@ -31,13 +35,10 @@ public class WorkflowNode {
             String name,
             String type
     ) {
-
         return WorkflowNode.builder()
                 .id(id)
                 .name(name)
                 .type(type)
-                .incoming(new ArrayList<>())
-                .outgoing(new ArrayList<>())
                 .build();
     }
 }
