@@ -1,6 +1,8 @@
 package com.blockchain.analyzer.parser;
 
-import com.blockchain.analyzer.model.BPMNTask;
+import com.blockchain.analyzer.model.WorkflowEdge;
+import com.blockchain.analyzer.model.WorkflowGraph;
+import com.blockchain.analyzer.model.WorkflowNode;
 import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.camunda.bpm.model.bpmn.instance.*;
@@ -12,44 +14,71 @@ import java.util.List;
 
 public class BPMNParser {
 
-    public List<BPMNTask> parse(String filePath) {
+    public WorkflowGraph parse(String filePath) {
 
-        List<BPMNTask> tasks = new ArrayList<>();
-
-        File file = new File(filePath);
+        List<WorkflowNode> nodes = new ArrayList<>();
+        List<WorkflowEdge> edges = new ArrayList<>();
 
         BpmnModelInstance modelInstance =
-                Bpmn.readModelFromFile(file);
+                Bpmn.readModelFromFile(new File(filePath));
 
-        Collection<ServiceTask> serviceTasks =
-                modelInstance.getModelElementsByType(ServiceTask.class);
+        Collection<FlowNode> flowNodes =
+                modelInstance.getModelElementsByType(FlowNode.class);
 
-        for (ServiceTask task : serviceTasks) {
+        for (FlowNode node : flowNodes) {
 
-            BPMNTask bpmnTask = BPMNTask.builder()
-                    .id(task.getId())
-                    .name(task.getName())
-                    .type("serviceTask")
-                    .processId(
-                            task.getParentElement().getAttributeValue("id")
-                    )
-                    .multiParticipant(false)
-                    .hasMessageFlow(false)
-                    .approvalTask(
-                            containsApprovalKeyword(task.getName())
-                    )
-                    .externalInteraction(
-                            containsExternalKeyword(task.getName())
-                    )
-                    .dataSensitive(
-                            containsSensitiveKeyword(task.getName())
-                    )
-                    .build();
+            WorkflowNode workflowNode =
+                    WorkflowNode.create(
+                            node.getId(),
+                            node.getName(),
+                            node.getElementType().getTypeName()
+                    );
 
-            tasks.add(bpmnTask);
+            workflowNode.setApprovalTask(
+                    containsApprovalKeyword(node.getName())
+            );
+
+            workflowNode.setExternalInteraction(
+                    containsExternalKeyword(node.getName())
+            );
+
+            workflowNode.setFinancialTask(
+                    containsFinancialKeyword(node.getName())
+            );
+
+            for (SequenceFlow incoming :
+                    node.getIncoming()) {
+
+                workflowNode.getIncoming()
+                        .add(incoming.getSource().getId());
+            }
+
+            for (SequenceFlow outgoing :
+                    node.getOutgoing()) {
+
+                workflowNode.getOutgoing()
+                        .add(outgoing.getTarget().getId());
+
+                edges.add(
+                        WorkflowEdge.builder()
+                                .source(
+                                        outgoing.getSource().getId()
+                                )
+                                .target(
+                                        outgoing.getTarget().getId()
+                                )
+                                .type("sequenceFlow")
+                                .build()
+                );
+            }
+
+            nodes.add(workflowNode);
         }
 
-        return tasks;
+        return WorkflowGraph.builder()
+                .nodes(nodes)
+                .edges(edges)
+                .build();
     }
 
     private boolean containsApprovalKeyword(String text) {
@@ -71,11 +100,11 @@ public class BPMNParser {
 
         return text.contains("payment")
                 || text.contains("invoice")
-                || text.contains("delivery")
-                || text.contains("shipment");
+                || text.contains("shipment")
+                || text.contains("delivery");
     }
 
-    private boolean containsSensitiveKeyword(String text) {
+    private boolean containsFinancialKeyword(String text) {
 
         if (text == null) return false;
 
@@ -83,6 +112,6 @@ public class BPMNParser {
 
         return text.contains("payment")
                 || text.contains("invoice")
-                || text.contains("customer");
+                || text.contains("billing");
     }
 }
