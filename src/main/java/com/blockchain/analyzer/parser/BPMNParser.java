@@ -3,161 +3,131 @@ package com.blockchain.analyzer.parser;
 import com.blockchain.analyzer.model.WorkflowEdge;
 import com.blockchain.analyzer.model.WorkflowGraph;
 import com.blockchain.analyzer.model.WorkflowNode;
-
 import org.springframework.stereotype.Component;
-
 import org.w3c.dom.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
+import java.util.ArrayList;
 
 @Component
 public class BPMNParser {
 
-    public WorkflowGraph parse(String xmlContent) {
-
-        WorkflowGraph graph = WorkflowGraph.builder().build();
+    public WorkflowGraph parse(String filePath) {
 
         try {
+
+            File file = new File(filePath);
 
             DocumentBuilderFactory factory =
                     DocumentBuilderFactory.newInstance();
 
+            factory.setNamespaceAware(true);
+
             DocumentBuilder builder =
                     factory.newDocumentBuilder();
 
-            Document document =
-                    builder.parse(
-                            new java.io.ByteArrayInputStream(
-                                    xmlContent.getBytes()
-                            )
-                    );
+            Document document = builder.parse(file);
 
             document.getDocumentElement().normalize();
 
-            NodeList nodeList =
-                    document.getElementsByTagName("nodes");
+            WorkflowGraph graph = WorkflowGraph.builder()
+                    .nodes(new ArrayList<>())
+                    .edges(new ArrayList<>())
+                    .build();
 
-            for (int i = 0; i < nodeList.getLength(); i++) {
+            parseTasks(document, graph);
 
-                Node node = nodeList.item(i);
+            parseSequenceFlows(document, graph);
 
-                if (node.getNodeType() != Node.ELEMENT_NODE) {
-                    continue;
-                }
-
-                Element element = (Element) node;
-
-                String id = getTagValue(element, "id");
-                String name = getTagValue(element, "name");
-                String type = getTagValue(element, "type");
-
-                if (id == null || type == null) {
-                    continue;
-                }
-
-                WorkflowNode workflowNode =
-                        WorkflowNode.create(id, name, type);
-
-                workflowNode.setExternalInteraction(
-                        Boolean.parseBoolean(
-                                getTagValue(
-                                        element,
-                                        "externalInteraction"
-                                )
-                        )
-                );
-
-                workflowNode.setApprovalTask(
-                        Boolean.parseBoolean(
-                                getTagValue(
-                                        element,
-                                        "approvalTask"
-                                )
-                        )
-                );
-
-                workflowNode.setFinancialTask(
-                        Boolean.parseBoolean(
-                                getTagValue(
-                                        element,
-                                        "financialTask"
-                                )
-                        )
-                );
-
-                graph.getNodes().add(workflowNode);
-            }
-
-            NodeList edgeList =
-                    document.getElementsByTagName("edges");
-
-            for (int i = 0; i < edgeList.getLength(); i++) {
-
-                Node node = edgeList.item(i);
-
-                if (node.getNodeType() != Node.ELEMENT_NODE) {
-                    continue;
-                }
-
-                Element element = (Element) node;
-
-                String source =
-                        getTagValue(element, "source");
-
-                String target =
-                        getTagValue(element, "target");
-
-                String type =
-                        getTagValue(element, "type");
-
-                if (source == null || target == null) {
-                    continue;
-                }
-
-                WorkflowEdge edge =
-                        WorkflowEdge.builder()
-                                .source(source)
-                                .target(target)
-                                .type(type)
-                                .build();
-
-                graph.getEdges().add(edge);
-
-                graph.getNodes().stream()
-                        .filter(n -> n.getId().equals(source))
-                        .findFirst()
-                        .ifPresent(
-                                n -> n.getOutgoing().add(target)
-                        );
-
-                graph.getNodes().stream()
-                        .filter(n -> n.getId().equals(target))
-                        .findFirst()
-                        .ifPresent(
-                                n -> n.getIncoming().add(source)
-                        );
-            }
+            return graph;
 
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-        return graph;
     }
 
-    private String getTagValue(
-            Element element,
-            String tagName
-    ) {
+    private void parseTasks(Document document,
+                            WorkflowGraph graph) {
+
+        parseElement(document, "bpmn:userTask", graph);
+        parseElement(document, "bpmn:serviceTask", graph);
+        parseElement(document, "bpmn:manualTask", graph);
+        parseElement(document, "bpmn:exclusiveGateway", graph);
+        parseElement(document, "bpmn:parallelGateway", graph);
+        parseElement(document, "bpmn:startEvent", graph);
+        parseElement(document, "bpmn:endEvent", graph);
+    }
+
+    private void parseElement(Document document,
+                              String tagName,
+                              WorkflowGraph graph) {
+
+        NodeList list = document.getElementsByTagName(tagName);
+
+        for (int i = 0; i < list.getLength(); i++) {
+
+            Element element = (Element) list.item(i);
+
+            String id = element.getAttribute("id");
+            String name = element.getAttribute("name");
+
+            WorkflowNode node =
+                    WorkflowNode.create(id, name, tagName);
+
+            enrichNode(node, name, tagName);
+
+            graph.getNodes().add(node);
+        }
+    }
+
+    private void enrichNode(WorkflowNode node,
+                            String name,
+                            String type) {
+
+        String lower =
+                (name + " " + type).toLowerCase();
+
+        node.setApprovalTask(
+                lower.contains("approve")
+                        || lower.contains("validation")
+                        || lower.contains("confirm")
+        );
+
+        node.setFinancialTask(
+                lower.contains("payment")
+                        || lower.contains("invoice")
+                        || lower.contains("billing")
+                        || lower.contains("transaction")
+        );
+
+        node.setExternalInteraction(
+                lower.contains("customer")
+                        || lower.contains("supplier")
+                        || lower.contains("shipment")
+                        || lower.contains("delivery")
+                        || lower.contains("message")
+        );
+    }
+
+    private void parseSequenceFlows(Document document,
+                                    WorkflowGraph graph) {
 
         NodeList list =
-                element.getElementsByTagName(tagName);
+                document.getElementsByTagName("bpmn:sequenceFlow");
 
-        if (list.getLength() == 0) {
-            return null;
+        for (int i = 0; i < list.getLength(); i++) {
+
+            Element element = (Element) list.item(i);
+
+            WorkflowEdge edge = WorkflowEdge.builder()
+                    .source(element.getAttribute("sourceRef"))
+                    .target(element.getAttribute("targetRef"))
+                    .type("sequenceFlow")
+                    .build();
+
+            graph.getEdges().add(edge);
         }
-
-        return list.item(0).getTextContent();
     }
 }
