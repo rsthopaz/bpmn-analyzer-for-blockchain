@@ -3,115 +3,161 @@ package com.blockchain.analyzer.parser;
 import com.blockchain.analyzer.model.WorkflowEdge;
 import com.blockchain.analyzer.model.WorkflowGraph;
 import com.blockchain.analyzer.model.WorkflowNode;
-import org.camunda.bpm.model.bpmn.Bpmn;
-import org.camunda.bpm.model.bpmn.BpmnModelInstance;
-import org.camunda.bpm.model.bpmn.instance.*;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import org.springframework.stereotype.Component;
 
+import org.w3c.dom.*;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+@Component
 public class BPMNParser {
 
-    public WorkflowGraph parse(String filePath) {
+    public WorkflowGraph parse(String xmlContent) {
 
-        List<WorkflowNode> nodes = new ArrayList<>();
-        List<WorkflowEdge> edges = new ArrayList<>();
+        WorkflowGraph graph = WorkflowGraph.builder().build();
 
-        BpmnModelInstance modelInstance =
-                Bpmn.readModelFromFile(new File(filePath));
+        try {
 
-        Collection<FlowNode> flowNodes =
-                modelInstance.getModelElementsByType(FlowNode.class);
+            DocumentBuilderFactory factory =
+                    DocumentBuilderFactory.newInstance();
 
-        for (FlowNode node : flowNodes) {
+            DocumentBuilder builder =
+                    factory.newDocumentBuilder();
 
-            WorkflowNode workflowNode =
-                    WorkflowNode.create(
-                            node.getId(),
-                            node.getName(),
-                            node.getElementType().getTypeName()
+            Document document =
+                    builder.parse(
+                            new java.io.ByteArrayInputStream(
+                                    xmlContent.getBytes()
+                            )
                     );
 
-            workflowNode.setApprovalTask(
-                    containsApprovalKeyword(node.getName())
-            );
+            document.getDocumentElement().normalize();
 
-            workflowNode.setExternalInteraction(
-                    containsExternalKeyword(node.getName())
-            );
+            NodeList nodeList =
+                    document.getElementsByTagName("nodes");
 
-            workflowNode.setFinancialTask(
-                    containsFinancialKeyword(node.getName())
-            );
+            for (int i = 0; i < nodeList.getLength(); i++) {
 
-            for (SequenceFlow incoming :
-                    node.getIncoming()) {
+                Node node = nodeList.item(i);
 
-                workflowNode.getIncoming()
-                        .add(incoming.getSource().getId());
-            }
+                if (node.getNodeType() != Node.ELEMENT_NODE) {
+                    continue;
+                }
 
-            for (SequenceFlow outgoing :
-                    node.getOutgoing()) {
+                Element element = (Element) node;
 
-                workflowNode.getOutgoing()
-                        .add(outgoing.getTarget().getId());
+                String id = getTagValue(element, "id");
+                String name = getTagValue(element, "name");
+                String type = getTagValue(element, "type");
 
-                edges.add(
-                        WorkflowEdge.builder()
-                                .source(
-                                        outgoing.getSource().getId()
+                if (id == null || type == null) {
+                    continue;
+                }
+
+                WorkflowNode workflowNode =
+                        WorkflowNode.create(id, name, type);
+
+                workflowNode.setExternalInteraction(
+                        Boolean.parseBoolean(
+                                getTagValue(
+                                        element,
+                                        "externalInteraction"
                                 )
-                                .target(
-                                        outgoing.getTarget().getId()
-                                )
-                                .type("sequenceFlow")
-                                .build()
+                        )
                 );
+
+                workflowNode.setApprovalTask(
+                        Boolean.parseBoolean(
+                                getTagValue(
+                                        element,
+                                        "approvalTask"
+                                )
+                        )
+                );
+
+                workflowNode.setFinancialTask(
+                        Boolean.parseBoolean(
+                                getTagValue(
+                                        element,
+                                        "financialTask"
+                                )
+                        )
+                );
+
+                graph.getNodes().add(workflowNode);
             }
 
-            nodes.add(workflowNode);
+            NodeList edgeList =
+                    document.getElementsByTagName("edges");
+
+            for (int i = 0; i < edgeList.getLength(); i++) {
+
+                Node node = edgeList.item(i);
+
+                if (node.getNodeType() != Node.ELEMENT_NODE) {
+                    continue;
+                }
+
+                Element element = (Element) node;
+
+                String source =
+                        getTagValue(element, "source");
+
+                String target =
+                        getTagValue(element, "target");
+
+                String type =
+                        getTagValue(element, "type");
+
+                if (source == null || target == null) {
+                    continue;
+                }
+
+                WorkflowEdge edge =
+                        WorkflowEdge.builder()
+                                .source(source)
+                                .target(target)
+                                .type(type)
+                                .build();
+
+                graph.getEdges().add(edge);
+
+                graph.getNodes().stream()
+                        .filter(n -> n.getId().equals(source))
+                        .findFirst()
+                        .ifPresent(
+                                n -> n.getOutgoing().add(target)
+                        );
+
+                graph.getNodes().stream()
+                        .filter(n -> n.getId().equals(target))
+                        .findFirst()
+                        .ifPresent(
+                                n -> n.getIncoming().add(source)
+                        );
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
 
-        return WorkflowGraph.builder()
-                .nodes(nodes)
-                .edges(edges)
-                .build();
+        return graph;
     }
 
-    private boolean containsApprovalKeyword(String text) {
+    private String getTagValue(
+            Element element,
+            String tagName
+    ) {
 
-        if (text == null) return false;
+        NodeList list =
+                element.getElementsByTagName(tagName);
 
-        text = text.toLowerCase();
+        if (list.getLength() == 0) {
+            return null;
+        }
 
-        return text.contains("approve")
-                || text.contains("validate")
-                || text.contains("confirm");
-    }
-
-    private boolean containsExternalKeyword(String text) {
-
-        if (text == null) return false;
-
-        text = text.toLowerCase();
-
-        return text.contains("payment")
-                || text.contains("invoice")
-                || text.contains("shipment")
-                || text.contains("delivery");
-    }
-
-    private boolean containsFinancialKeyword(String text) {
-
-        if (text == null) return false;
-
-        text = text.toLowerCase();
-
-        return text.contains("payment")
-                || text.contains("invoice")
-                || text.contains("billing");
+        return list.item(0).getTextContent();
     }
 }
