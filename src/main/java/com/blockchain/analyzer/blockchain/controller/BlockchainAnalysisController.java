@@ -2,8 +2,8 @@ package com.blockchain.analyzer.controller;
 
 import com.blockchain.analyzer.blockchain.model.BlockchainRecommendation;
 import com.blockchain.analyzer.blockchain.service.BlockchainAnalysisService;
-import com.blockchain.analyzer.parser.model.WorkflowGraph;
-import com.blockchain.analyzer.parser.service.BpmnParserService;
+import com.blockchain.analyzer.model.WorkflowGraph;
+import com.blockchain.analyzer.parser.BPMNParser;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,12 +13,12 @@ import java.util.List;
 @RequestMapping("/api/blockchain")
 public class BlockchainAnalysisController {
 
-    private final BpmnParserService parserService;
+    private final BPMNParser parserService;
 
     private final BlockchainAnalysisService analysisService;
 
     public BlockchainAnalysisController(
-            BpmnParserService parserService,
+            BPMNParser parserService,
             BlockchainAnalysisService analysisService
     ) {
 
