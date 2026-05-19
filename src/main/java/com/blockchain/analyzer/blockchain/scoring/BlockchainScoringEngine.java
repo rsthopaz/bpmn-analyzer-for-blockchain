@@ -3,7 +3,7 @@ package com.blockchain.analyzer.blockchain.scoring;
 import com.blockchain.analyzer.blockchain.model.BlockchainSuitability;
 import com.blockchain.analyzer.blockchain.model.ExecutionMode;
 import com.blockchain.analyzer.blockchain.model.BlockchainRecommendation;
-import com.blockchain.analyzer.parser.model.WorkflowNode;
+import com.blockchain.analyzer.model.WorkflowNode;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
