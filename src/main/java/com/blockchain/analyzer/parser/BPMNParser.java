@@ -12,6 +12,9 @@ import java.io.File;
 import java.io.ByteArrayInputStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class BPMNParser {
@@ -37,9 +40,13 @@ public class BPMNParser {
                     .edges(new ArrayList<>())
                     .build();
 
-            parseTasks(document, graph);
+            ParticipantMaps participantMaps = parseParticipants(document);
+
+            parseTasks(document, graph, participantMaps.processIdToName);
 
             parseSequenceFlows(document, graph);
+
+            parseMessageFlows(document, graph, participantMaps);
 
             return graph;
 
@@ -112,21 +119,23 @@ public class BPMNParser {
                 return os != null && os.toLowerCase().contains("win");
         }
 
-    private void parseTasks(Document document,
-                            WorkflowGraph graph) {
+        private void parseTasks(Document document,
+                                                        WorkflowGraph graph,
+                                                        Map<String, String> processIdToParticipant) {
 
-        parseElement(document, "bpmn:userTask", graph);
-        parseElement(document, "bpmn:serviceTask", graph);
-        parseElement(document, "bpmn:manualTask", graph);
-        parseElement(document, "bpmn:exclusiveGateway", graph);
-        parseElement(document, "bpmn:parallelGateway", graph);
-        parseElement(document, "bpmn:startEvent", graph);
-        parseElement(document, "bpmn:endEvent", graph);
+                parseElement(document, "bpmn:userTask", graph, processIdToParticipant);
+                parseElement(document, "bpmn:serviceTask", graph, processIdToParticipant);
+                parseElement(document, "bpmn:manualTask", graph, processIdToParticipant);
+                parseElement(document, "bpmn:exclusiveGateway", graph, processIdToParticipant);
+                parseElement(document, "bpmn:parallelGateway", graph, processIdToParticipant);
+                parseElement(document, "bpmn:startEvent", graph, processIdToParticipant);
+                parseElement(document, "bpmn:endEvent", graph, processIdToParticipant);
     }
 
     private void parseElement(Document document,
                               String tagName,
-                              WorkflowGraph graph) {
+                                                          WorkflowGraph graph,
+                                                          Map<String, String> processIdToParticipant) {
 
         NodeList list = document.getElementsByTagName(tagName);
 
@@ -140,11 +149,191 @@ public class BPMNParser {
             WorkflowNode node =
                     WorkflowNode.create(id, name, tagName);
 
+            String participantName = resolveParticipantName(
+                    element,
+                    processIdToParticipant
+            );
+
+            node.setParticipantName(participantName);
+
             enrichNode(node, name, tagName);
 
             graph.getNodes().add(node);
         }
     }
+
+        private ParticipantMaps parseParticipants(Document document) {
+
+                Map<String, String> processIdToName = new HashMap<>();
+                Map<String, String> participantIdToName = new HashMap<>();
+
+                NodeList list = document.getElementsByTagName("bpmn:participant");
+
+                for (int i = 0; i < list.getLength(); i++) {
+                        Element element = (Element) list.item(i);
+                        String participantId = element.getAttribute("id");
+                        String participantName = element.getAttribute("name");
+                        String processRef = element.getAttribute("processRef");
+
+                        String resolvedName = participantName == null || participantName.isBlank()
+                                        ? participantId
+                                        : participantName;
+
+                        if (processRef != null && !processRef.isBlank()) {
+                                processIdToName.put(processRef, resolvedName);
+                        }
+
+                        if (participantId != null && !participantId.isBlank()) {
+                                participantIdToName.put(participantId, resolvedName);
+                        }
+                }
+
+                return new ParticipantMaps(processIdToName, participantIdToName);
+        }
+
+        private void parseMessageFlows(
+                        Document document,
+                        WorkflowGraph graph,
+                        ParticipantMaps participantMaps
+        ) {
+
+                Map<String, WorkflowNode> nodeById = new HashMap<>();
+
+                for (WorkflowNode node : graph.getNodes()) {
+                        nodeById.put(node.getId(), node);
+                }
+
+                NodeList list = document.getElementsByTagName("bpmn:messageFlow");
+
+                for (int i = 0; i < list.getLength(); i++) {
+
+                        Element element = (Element) list.item(i);
+
+                        String sourceRef = element.getAttribute("sourceRef");
+                        String targetRef = element.getAttribute("targetRef");
+                        String flowId = element.getAttribute("id");
+
+                        WorkflowNode sourceNode = nodeById.get(sourceRef);
+                        WorkflowNode targetNode = nodeById.get(targetRef);
+
+                        String sourceParticipant = resolveParticipantName(
+                                        sourceNode,
+                                        sourceRef,
+                                        participantMaps
+                        );
+
+                        String targetParticipant = resolveParticipantName(
+                                        targetNode,
+                                        targetRef,
+                                        participantMaps
+                        );
+
+                        if (sourceNode != null) {
+                                sourceNode.setExternalDataFlow(true);
+                                sourceNode.getConnectedMessageFlows()
+                                                .add(formatMessageFlow(flowId, sourceParticipant, targetParticipant));
+                        }
+
+                        if (targetNode != null) {
+                                targetNode.setExternalDataFlow(true);
+                                targetNode.getConnectedMessageFlows()
+                                                .add(formatMessageFlow(flowId, sourceParticipant, targetParticipant));
+                        }
+
+                        if (sourceNode != null
+                                        && targetNode != null
+                                        && sourceParticipant != null
+                                        && targetParticipant != null
+                                        && !sourceParticipant.equals(targetParticipant)) {
+
+                                sourceNode.setCrossOrganizationFlow(true);
+                                targetNode.setCrossOrganizationFlow(true);
+
+                                String reason = "Message flow detected between "
+                                                + sourceParticipant
+                                                + " and "
+                                                + targetParticipant;
+
+                                if (sourceNode.getCrossOrganizationFlowReason() == null) {
+                                        sourceNode.setCrossOrganizationFlowReason(reason);
+                                }
+
+                                if (targetNode.getCrossOrganizationFlowReason() == null) {
+                                        targetNode.setCrossOrganizationFlowReason(reason);
+                                }
+                        }
+                }
+        }
+
+        private String formatMessageFlow(
+                        String flowId,
+                        String sourceParticipant,
+                        String targetParticipant
+        ) {
+                String label = flowId == null || flowId.isBlank()
+                                ? "messageFlow"
+                                : flowId;
+
+                return label + ": " + sourceParticipant + " -> " + targetParticipant;
+        }
+
+        private String resolveParticipantName(
+                        Element element,
+                        Map<String, String> processIdToParticipant
+        ) {
+                Element current = element;
+
+                while (current != null) {
+                        if (isProcessElement(current)) {
+                                String processId = current.getAttribute("id");
+                                return processIdToParticipant.get(processId);
+                        }
+
+                        Node parent = current.getParentNode();
+                        if (parent instanceof Element) {
+                                current = (Element) parent;
+                        } else {
+                                current = null;
+                        }
+                }
+
+                return null;
+        }
+
+        private String resolveParticipantName(
+                        WorkflowNode node,
+                        String ref,
+                        ParticipantMaps participantMaps
+        ) {
+                if (node != null && node.getParticipantName() != null) {
+                        return node.getParticipantName();
+                }
+
+                if (ref != null && participantMaps.participantIdToName.containsKey(ref)) {
+                        return participantMaps.participantIdToName.get(ref);
+                }
+
+                return null;
+        }
+
+        private boolean isProcessElement(Element element) {
+                String name = element.getNodeName();
+                return "bpmn:process".equals(name) || name.endsWith(":process");
+        }
+
+        private static class ParticipantMaps {
+
+                private final Map<String, String> processIdToName;
+                private final Map<String, String> participantIdToName;
+
+                private ParticipantMaps(
+                                Map<String, String> processIdToName,
+                                Map<String, String> participantIdToName
+                ) {
+                        this.processIdToName = processIdToName;
+                        this.participantIdToName = participantIdToName;
+                }
+        }
 
     private void enrichNode(WorkflowNode node,
                             String name,

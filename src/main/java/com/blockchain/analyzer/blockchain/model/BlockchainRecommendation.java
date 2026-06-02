@@ -27,6 +27,8 @@ public class BlockchainRecommendation {
 
     private List<String> gateReasons;
 
+    private List<String> stageSummaries;
+
     private List<String> reasons;
 
 }
