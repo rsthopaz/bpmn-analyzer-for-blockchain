@@ -1,6 +1,7 @@
 package com.blockchain.analyzer.blockchain.service;
 
 import com.blockchain.analyzer.blockchain.model.BlockchainRecommendation;
+import com.blockchain.analyzer.blockchain.model.AssessmentContext;
 import com.blockchain.analyzer.blockchain.scoring.BlockchainScoringEngine;
 import com.blockchain.analyzer.model.WorkflowGraph;
 // import com.blockchain.analyzer.model.WorkflowNode;
@@ -21,9 +22,32 @@ public class BlockchainAnalysisService {
 
     public List<BlockchainRecommendation> analyze(WorkflowGraph graph) {
 
+        AssessmentContext context = buildContext(graph);
+
         return graph.getNodes()
                 .stream()
-                .map(scoringEngine::evaluate)
+            .map(node -> scoringEngine.evaluate(node, context))
                 .collect(Collectors.toList());
     }
+
+        private AssessmentContext buildContext(WorkflowGraph graph) {
+
+        boolean hasExternalInteraction = graph.getNodes()
+            .stream()
+            .anyMatch(node -> node.isExternalInteraction());
+
+        boolean hasCrossOrganizationFlow = graph.getNodes()
+            .stream()
+            .anyMatch(node -> node.isCrossOrganizationFlow());
+
+        boolean hasExternalDataFlow = graph.getNodes()
+            .stream()
+            .anyMatch(node -> node.isExternalDataFlow());
+
+        return AssessmentContext.builder()
+            .graphHasExternalInteraction(hasExternalInteraction)
+            .graphHasCrossOrganizationFlow(hasCrossOrganizationFlow)
+            .graphHasExternalDataFlow(hasExternalDataFlow)
+            .build();
+        }
 }

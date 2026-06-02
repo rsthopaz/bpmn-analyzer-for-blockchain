@@ -9,16 +9,16 @@ import org.w3c.dom.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.io.ByteArrayInputStream;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 @Component
 public class BPMNParser {
 
-    public WorkflowGraph parse(String filePath) {
+        public WorkflowGraph parse(String input) {
 
         try {
-
-            File file = new File(filePath);
 
             DocumentBuilderFactory factory =
                     DocumentBuilderFactory.newInstance();
@@ -28,7 +28,7 @@ public class BPMNParser {
             DocumentBuilder builder =
                     factory.newDocumentBuilder();
 
-            Document document = builder.parse(file);
+            Document document = parseDocument(builder, input);
 
             document.getDocumentElement().normalize();
 
@@ -47,6 +47,70 @@ public class BPMNParser {
             throw new RuntimeException(e);
         }
     }
+
+        private Document parseDocument(DocumentBuilder builder,
+                                                                   String input) throws Exception {
+
+                if (input != null && input.trim().startsWith("<")) {
+                        return builder.parse(
+                                        new ByteArrayInputStream(input.getBytes())
+                        );
+                }
+
+                Path path = resolvePath(input);
+
+                return builder.parse(path.toFile());
+        }
+
+        private Path resolvePath(String filePath) {
+
+                if (isWindows()
+                        && filePath != null
+                        && filePath.startsWith("/mnt/")
+                        && filePath.length() > 7
+                        && filePath.charAt(6) == '/') {
+
+                        char drive = filePath.charAt(5);
+                        String rest = filePath.substring(7)
+                                        .replace('/', '\\');
+
+                        return Path.of(drive + ":\\" + rest);
+                }
+
+                if (!isWindows() && isWindowsPath(filePath)) {
+
+                        char drive = Character.toLowerCase(filePath.charAt(0));
+                        String rest = filePath.substring(2)
+                                        .replace('\\', '/')
+                                        .replaceFirst("^/", "");
+
+                        return Path.of("/mnt/" + drive + "/" + rest);
+                }
+
+                return Path.of(filePath);
+        }
+
+        private boolean isWindowsPath(String filePath) {
+
+                if (filePath == null || filePath.length() < 3) {
+                        return false;
+                }
+
+                char drive = filePath.charAt(0);
+                char colon = filePath.charAt(1);
+                char slash = filePath.charAt(2);
+
+                return Character.isLetter(drive)
+                                && colon == ':'
+                                && (slash == '\\' || slash == '/');
+        }
+
+        private boolean isWindows() {
+
+                String os = System.getProperty("os.name");
+
+                return os != null && os.toLowerCase().contains("win");
+        }
 
     private void parseTasks(Document document,
                             WorkflowGraph graph) {

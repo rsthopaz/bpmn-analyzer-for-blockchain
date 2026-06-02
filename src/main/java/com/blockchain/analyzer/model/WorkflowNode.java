@@ -30,6 +30,10 @@ public class WorkflowNode {
 
     private boolean financialTask;
 
+    private boolean crossOrganizationFlow;
+
+    private boolean externalDataFlow;
+
     public static WorkflowNode create(
             String id,
             String name,

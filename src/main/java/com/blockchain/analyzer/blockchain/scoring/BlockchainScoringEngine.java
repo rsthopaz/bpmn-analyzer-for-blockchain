@@ -1,97 +1,63 @@
 package com.blockchain.analyzer.blockchain.scoring;
 
 import com.blockchain.analyzer.blockchain.model.BlockchainSuitability;
+import com.blockchain.analyzer.blockchain.model.AssessmentContext;
 import com.blockchain.analyzer.blockchain.model.ExecutionMode;
 import com.blockchain.analyzer.blockchain.model.BlockchainRecommendation;
 import com.blockchain.analyzer.model.WorkflowNode;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class BlockchainScoringEngine {
 
     public BlockchainRecommendation evaluate(WorkflowNode node) {
 
+        return evaluate(node, AssessmentContext.builder().build());
+    }
+
+    public BlockchainRecommendation evaluate(
+            WorkflowNode node,
+            AssessmentContext context
+    ) {
+
         int score = 0;
 
         List<String> reasons = new ArrayList<>();
+        List<String> gateReasons = new ArrayList<>();
 
-        /*
-         * Financial Processes
-         */
-        if (node.isFinancialTask()) {
+        WustDecision decision = evaluateWustCriteria(node, context);
+        boolean gatePassed = passesHardGate(decision, gateReasons);
 
-            score += 35;
-
-            reasons.add("Financial transaction detected");
-
-        }
-
-        /*
-         * External Collaboration
-         */
-        if (node.isExternalInteraction()) {
-
-            score += 25;
-
-            reasons.add("External interaction detected");
-
-        }
-
-        /*
-         * Approval / Validation
-         */
-        if (node.isApprovalTask()) {
-
-            score += 20;
-
-            reasons.add("Approval or validation workflow");
-
-        }
-
-        /*
-         * Service Automation
-         */
-        if ("serviceTask".equals(node.getType())) {
-
-            score += 15;
-
-            reasons.add("Automated service orchestration");
-
-        }
-
-        /*
-         * Decision Workflow
-         */
-        if ("exclusiveGateway".equals(node.getType())) {
-
-            score += 10;
-
-            reasons.add("Decision workflow detected");
-
+        if (gatePassed) {
+            score = calculateSoftScore(node, reasons);
+        } else {
+            score = 0;
         }
 
         BlockchainSuitability suitability;
 
-        if (score >= 70) {
-
-            suitability = BlockchainSuitability.BLOCKCHAIN_SUITABLE;
-
-        } else if (score >= 40) {
-
-            suitability = BlockchainSuitability.PARTIALLY_SUITABLE;
-
-        } else {
-
+        if (!gatePassed) {
             suitability = BlockchainSuitability.NOT_SUITABLE;
-
+        } else if (score >= 70) {
+            suitability = BlockchainSuitability.BLOCKCHAIN_SUITABLE;
+        } else if (score >= 40) {
+            suitability = BlockchainSuitability.PARTIALLY_SUITABLE;
+        } else {
+            suitability = BlockchainSuitability.NOT_SUITABLE;
         }
 
-        ExecutionMode mode = determineExecutionMode(node);
+        ExecutionMode mode = gatePassed
+                ? determineExecutionMode(node)
+                : ExecutionMode.OFF_CHAIN;
 
-        String blockchain = recommendBlockchain(node);
+        String blockchain = gatePassed
+            ? recommendBlockchain(decision)
+            : "Not applicable";
 
         return BlockchainRecommendation.builder()
                 .serviceId(node.getId())
@@ -99,11 +65,256 @@ public class BlockchainScoringEngine {
                 .serviceType(node.getType())
                 .score(score)
                 .suitability(suitability)
+                .hardGatePassed(gatePassed)
                 .executionMode(mode)
                 .recommendedBlockchain(blockchain)
+                .gateReasons(gateReasons)
                 .reasons(reasons)
                 .build();
     }
+
+        private boolean passesHardGate(
+            WustDecision decision,
+            List<String> gateReasons
+        ) {
+
+        if (!decision.sharedLedger) {
+            gateReasons.add(
+                "Wust gate: no shared ledger requirement detected"
+            );
+            return false;
+        }
+
+        if (!decision.multipleWriters) {
+            gateReasons.add(
+                "Wust gate: no multiple writers detected"
+            );
+            return false;
+        }
+
+        if (!decision.untrustedStakeholders && !decision.dataPrivate) {
+            gateReasons.add(
+                "Wust gate: trusted stakeholders with no private data need"
+            );
+            return false;
+        }
+
+        gateReasons.add("Wust gate: shared ledger requirement met");
+        gateReasons.add("Wust gate: multiple writers detected");
+        gateReasons.add("Wust gate: untrusted stakeholders or private data need");
+
+        return true;
+        }
+
+        private WustDecision evaluateWustCriteria(
+            WorkflowNode node,
+            AssessmentContext context
+        ) {
+
+        boolean sharedLedger =
+            node.isExternalDataFlow()
+                || node.isCrossOrganizationFlow()
+                || context.isGraphHasExternalDataFlow()
+                || context.isGraphHasCrossOrganizationFlow();
+
+        boolean multipleWriters =
+            node.isCrossOrganizationFlow()
+                || context.isGraphHasCrossOrganizationFlow();
+
+        boolean untrustedStakeholders =
+            node.isExternalInteraction()
+                || context.isGraphHasExternalInteraction();
+
+        boolean dataPrivate = node.isFinancialTask() || node.isApprovalTask();
+
+        boolean restrictedControl = dataPrivate;
+
+        boolean consortiumMaintenance =
+            restrictedControl
+                && (node.isCrossOrganizationFlow()
+                || context.isGraphHasCrossOrganizationFlow());
+
+        return new WustDecision(
+            sharedLedger,
+            multipleWriters,
+            untrustedStakeholders,
+            dataPrivate,
+            restrictedControl,
+            consortiumMaintenance
+        );
+        }
+
+    private int calculateSoftScore(
+            WorkflowNode node,
+            List<String> reasons
+    ) {
+
+        Map<SoftCriterion, Double> weights = computeWeights();
+
+        int score = 0;
+
+        score += applyCriterion(
+                node.isFinancialTask(),
+                SoftCriterion.FINANCIAL_PROCESS,
+                weights,
+                reasons,
+                "Financial transaction detected"
+        );
+
+        score += applyCriterion(
+                node.isExternalInteraction(),
+                SoftCriterion.EXTERNAL_INTERACTION,
+                weights,
+                reasons,
+                "External interaction detected"
+        );
+
+        score += applyCriterion(
+                node.isApprovalTask(),
+                SoftCriterion.APPROVAL_WORKFLOW,
+                weights,
+                reasons,
+                "Approval or validation workflow"
+        );
+
+        score += applyCriterion(
+                "serviceTask".equals(node.getType()),
+                SoftCriterion.SERVICE_AUTOMATION,
+                weights,
+                reasons,
+                "Automated service orchestration"
+        );
+
+        score += applyCriterion(
+                "exclusiveGateway".equals(node.getType()),
+                SoftCriterion.DECISION_WORKFLOW,
+                weights,
+                reasons,
+                "Decision workflow detected"
+        );
+
+        score += applyCriterion(
+                node.isCrossOrganizationFlow(),
+                SoftCriterion.CROSS_ORGANIZATION_FLOW,
+                weights,
+                reasons,
+                "Cross-organization flow context"
+        );
+
+        score += applyCriterion(
+                node.isExternalDataFlow(),
+                SoftCriterion.EXTERNAL_DATA_FLOW,
+                weights,
+                reasons,
+                "External data flow context"
+        );
+
+        return Math.min(score, 100);
+    }
+
+    private int applyCriterion(
+            boolean applies,
+            SoftCriterion criterion,
+            Map<SoftCriterion, Double> weights,
+            List<String> reasons,
+            String reason
+    ) {
+
+        if (!applies) {
+            return 0;
+        }
+
+        double weight = weights.getOrDefault(criterion, 0.0);
+        int points = (int) Math.round(weight * 100);
+
+        reasons.add(reason + " (weight=" + formatWeight(weight) + ")");
+
+        return points;
+    }
+
+    private Map<SoftCriterion, Double> computeWeights() {
+
+        Map<SoftCriterion, Double> geometricMeans =
+                new EnumMap<>(SoftCriterion.class);
+
+        int size = SoftCriterion.values().length;
+
+        for (int i = 0; i < size; i++) {
+            double product = 1.0;
+            for (int j = 0; j < size; j++) {
+                product *= AHP_PAIRWISE[i][j];
+            }
+            geometricMeans.put(
+                    SoftCriterion.values()[i],
+                    Math.pow(product, 1.0 / size)
+            );
+        }
+
+        double sum = geometricMeans.values()
+                .stream()
+                .mapToDouble(Double::doubleValue)
+                .sum();
+
+        Map<SoftCriterion, Double> weights =
+                new EnumMap<>(SoftCriterion.class);
+
+        for (Map.Entry<SoftCriterion, Double> entry : geometricMeans.entrySet()) {
+            weights.put(entry.getKey(), entry.getValue() / sum);
+        }
+
+        return weights;
+    }
+
+    private String formatWeight(double weight) {
+
+        return String.format("%.2f", weight);
+    }
+
+    private enum SoftCriterion {
+        FINANCIAL_PROCESS,
+        EXTERNAL_INTERACTION,
+        APPROVAL_WORKFLOW,
+        SERVICE_AUTOMATION,
+        DECISION_WORKFLOW,
+        CROSS_ORGANIZATION_FLOW,
+        EXTERNAL_DATA_FLOW
+    }
+
+    private static class WustDecision {
+
+        private final boolean sharedLedger;
+        private final boolean multipleWriters;
+        private final boolean untrustedStakeholders;
+        private final boolean dataPrivate;
+        private final boolean restrictedControl;
+        private final boolean consortiumMaintenance;
+
+        private WustDecision(
+                boolean sharedLedger,
+                boolean multipleWriters,
+                boolean untrustedStakeholders,
+                boolean dataPrivate,
+                boolean restrictedControl,
+                boolean consortiumMaintenance
+        ) {
+            this.sharedLedger = sharedLedger;
+            this.multipleWriters = multipleWriters;
+            this.untrustedStakeholders = untrustedStakeholders;
+            this.dataPrivate = dataPrivate;
+            this.restrictedControl = restrictedControl;
+            this.consortiumMaintenance = consortiumMaintenance;
+        }
+    }
+
+    private static final double[][] AHP_PAIRWISE = {
+            {1, 1, 1, 1, 1, 1, 1},
+            {1, 1, 1, 1, 1, 1, 1},
+            {1, 1, 1, 1, 1, 1, 1},
+            {1, 1, 1, 1, 1, 1, 1},
+            {1, 1, 1, 1, 1, 1, 1},
+            {1, 1, 1, 1, 1, 1, 1},
+            {1, 1, 1, 1, 1, 1, 1}
+    };
 
     private ExecutionMode determineExecutionMode(WorkflowNode node) {
 
@@ -128,18 +339,14 @@ public class BlockchainScoringEngine {
         return ExecutionMode.HYBRID;
     }
 
-    private String recommendBlockchain(WorkflowNode node) {
+    private String recommendBlockchain(WustDecision decision) {
 
-        if (node.isFinancialTask()) {
-
-            return "Hyperledger Fabric";
-
+        if (!decision.dataPrivate && !decision.restrictedControl) {
+            return "Public Blockchain";
         }
 
-        if (node.isExternalInteraction()) {
-
+        if (decision.consortiumMaintenance) {
             return "Consortium Blockchain";
-
         }
 
         return "Private Blockchain";

@@ -19,9 +19,13 @@ public class BlockchainRecommendation {
 
     private int score;
 
+    private boolean hardGatePassed;
+
     private ExecutionMode executionMode;
 
     private String recommendedBlockchain;
+
+    private List<String> gateReasons;
 
     private List<String> reasons;
 
