@@ -120,6 +120,8 @@ public class BPMNParser {
         parseElement(document, "bpmn:userTask", graph);
         parseElement(document, "bpmn:serviceTask", graph);
         parseElement(document, "bpmn:manualTask", graph);
+        parseElement(document, "bpmn:sendTask", graph);
+        parseElement(document, "bpmn:receiveTask", graph);
         parseElement(document, "bpmn:exclusiveGateway", graph);
         parseElement(document, "bpmn:parallelGateway", graph);
         parseElement(document, "bpmn:startEvent", graph);
@@ -175,6 +177,9 @@ public class BPMNParser {
                         || lower.contains("delivery")
                         || lower.contains("message")
                         || lower.contains("order")
+                        || lower.contains("send")
+                        || lower.contains("receive")
+                        || lower.contains("callback")
         );
 
         node.setExternalDataFlow(
@@ -184,6 +189,8 @@ public class BPMNParser {
                         || lower.contains("request")
                         || lower.contains("notify")
                         || lower.contains("call")
+                        || lower.contains("data")
+                        || lower.contains("order")
         );
 
         node.setCrossOrganizationFlow(
@@ -197,6 +204,8 @@ public class BPMNParser {
                         || lower.contains("payment")
                         || lower.contains("message")
                         || lower.contains("request")
+                        || lower.contains("send")
+                        || lower.contains("receive")
         );
     }
 

@@ -5,18 +5,16 @@
         "serviceType": "bpmn:userTask",
         "suitability": "NOT_SUITABLE",
         "score": 0,
-        "hardGatePassed": true,
-        "executionMode": "HYBRID",
-        "recommendedBlockchain": "Public Blockchain",
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
         "gateReasons": [
-            "Wust gate: shared ledger requirement met",
-            "Wust gate: multiple writers detected",
-            "Wust gate: untrusted stakeholders or private data need"
+            "Wust gate: no shared ledger requirement detected"
         ],
         "stageSummaries": [
-            "Stage 1 (Wust gate): PASS",
+            "Stage 1 (Wust gate): FAIL",
             "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=false, externalDataFlow=false, financialTask=false, approvalTask=false",
-            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Public Blockchain"
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
         ],
         "reasons": []
     },
@@ -26,18 +24,16 @@
         "serviceType": "bpmn:userTask",
         "suitability": "NOT_SUITABLE",
         "score": 0,
-        "hardGatePassed": true,
-        "executionMode": "HYBRID",
-        "recommendedBlockchain": "Public Blockchain",
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
         "gateReasons": [
-            "Wust gate: shared ledger requirement met",
-            "Wust gate: multiple writers detected",
-            "Wust gate: untrusted stakeholders or private data need"
+            "Wust gate: no shared ledger requirement detected"
         ],
         "stageSummaries": [
-            "Stage 1 (Wust gate): PASS",
+            "Stage 1 (Wust gate): FAIL",
             "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=false, externalDataFlow=false, financialTask=false, approvalTask=false",
-            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Public Blockchain"
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
         ],
         "reasons": []
     },
@@ -46,7 +42,7 @@
         "serviceName": "Handle Order Exception (Stock or Payment Issue)",
         "serviceType": "bpmn:userTask",
         "suitability": "PARTIALLY_SUITABLE",
-        "score": 42,
+        "score": 56,
         "hardGatePassed": true,
         "executionMode": "HYBRID",
         "recommendedBlockchain": "Consortium Blockchain",
@@ -57,21 +53,22 @@
         ],
         "stageSummaries": [
             "Stage 1 (Wust gate): PASS",
-            "Stage 2 (Context): externalInteraction=true, crossOrganizationFlow=true, externalDataFlow=false, financialTask=true, approvalTask=false",
-            "Stage 3 (Scoring): score=42, suitability=PARTIALLY_SUITABLE, blockchain=Consortium Blockchain"
+            "Stage 2 (Context): externalInteraction=true, crossOrganizationFlow=true, externalDataFlow=true, financialTask=true, approvalTask=false",
+            "Stage 3 (Scoring): score=56, suitability=PARTIALLY_SUITABLE, blockchain=Consortium Blockchain"
         ],
         "reasons": [
             "Financial transaction detected (weight=0.14)",
             "External interaction detected (weight=0.14)",
-            "Cross-organization flow context (weight=0.14)"
+            "Cross-organization flow context (weight=0.14)",
+            "External data flow context (weight=0.14)"
         ]
     },
     {
         "serviceId": "id-944a2aad-0f16-425c-a85b-a47bde217d17",
         "serviceName": "Handle Successful Order (Ready for Shipping)",
         "serviceType": "bpmn:userTask",
-        "suitability": "NOT_SUITABLE",
-        "score": 28,
+        "suitability": "PARTIALLY_SUITABLE",
+        "score": 42,
         "hardGatePassed": true,
         "executionMode": "HYBRID",
         "recommendedBlockchain": "Public Blockchain",
@@ -82,12 +79,13 @@
         ],
         "stageSummaries": [
             "Stage 1 (Wust gate): PASS",
-            "Stage 2 (Context): externalInteraction=true, crossOrganizationFlow=true, externalDataFlow=false, financialTask=false, approvalTask=false",
-            "Stage 3 (Scoring): score=28, suitability=NOT_SUITABLE, blockchain=Public Blockchain"
+            "Stage 2 (Context): externalInteraction=true, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=42, suitability=PARTIALLY_SUITABLE, blockchain=Public Blockchain"
         ],
         "reasons": [
             "External interaction detected (weight=0.14)",
-            "Cross-organization flow context (weight=0.14)"
+            "Cross-organization flow context (weight=0.14)",
+            "External data flow context (weight=0.14)"
         ]
     },
     {
@@ -120,46 +118,38 @@
         "serviceName": "Reject Order",
         "serviceType": "bpmn:userTask",
         "suitability": "NOT_SUITABLE",
-        "score": 14,
-        "hardGatePassed": true,
-        "executionMode": "HYBRID",
-        "recommendedBlockchain": "Public Blockchain",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
         "gateReasons": [
-            "Wust gate: shared ledger requirement met",
-            "Wust gate: multiple writers detected",
-            "Wust gate: untrusted stakeholders or private data need"
+            "Wust gate: no multiple writers detected"
         ],
         "stageSummaries": [
-            "Stage 1 (Wust gate): PASS",
-            "Stage 2 (Context): externalInteraction=true, crossOrganizationFlow=false, externalDataFlow=false, financialTask=false, approvalTask=false",
-            "Stage 3 (Scoring): score=14, suitability=NOT_SUITABLE, blockchain=Public Blockchain"
+            "Stage 1 (Wust gate): FAIL",
+            "Stage 2 (Context): externalInteraction=true, crossOrganizationFlow=false, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
         ],
-        "reasons": [
-            "External interaction detected (weight=0.14)"
-        ]
+        "reasons": []
     },
     {
         "serviceId": "id-26086b7e-c116-4d3c-aada-ff9cf53c4a43",
         "serviceName": "Validate Order",
         "serviceType": "bpmn:userTask",
         "suitability": "NOT_SUITABLE",
-        "score": 14,
-        "hardGatePassed": true,
-        "executionMode": "HYBRID",
-        "recommendedBlockchain": "Public Blockchain",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
         "gateReasons": [
-            "Wust gate: shared ledger requirement met",
-            "Wust gate: multiple writers detected",
-            "Wust gate: untrusted stakeholders or private data need"
+            "Wust gate: no multiple writers detected"
         ],
         "stageSummaries": [
-            "Stage 1 (Wust gate): PASS",
-            "Stage 2 (Context): externalInteraction=true, crossOrganizationFlow=false, externalDataFlow=false, financialTask=false, approvalTask=false",
-            "Stage 3 (Scoring): score=14, suitability=NOT_SUITABLE, blockchain=Public Blockchain"
+            "Stage 1 (Wust gate): FAIL",
+            "Stage 2 (Context): externalInteraction=true, crossOrganizationFlow=false, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
         ],
-        "reasons": [
-            "External interaction detected (weight=0.14)"
-        ]
+        "reasons": []
     },
     {
         "serviceId": "id-7bedcf23-3d1d-4e68-9e21-59f4684c1e6d",
@@ -244,26 +234,20 @@
         "serviceId": "id-c1f7764d-3bf9-4f84-a2f9-d00d77272b51",
         "serviceName": "Call Inventory Management Process",
         "serviceType": "bpmn:serviceTask",
-        "suitability": "PARTIALLY_SUITABLE",
-        "score": 42,
-        "hardGatePassed": true,
-        "executionMode": "HYBRID",
-        "recommendedBlockchain": "Public Blockchain",
+        "suitability": "NOT_SUITABLE",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
         "gateReasons": [
-            "Wust gate: shared ledger requirement met",
-            "Wust gate: multiple writers detected",
-            "Wust gate: untrusted stakeholders or private data need"
+            "Wust gate: trusted stakeholders with no private data need"
         ],
         "stageSummaries": [
-            "Stage 1 (Wust gate): PASS",
+            "Stage 1 (Wust gate): FAIL",
             "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
-            "Stage 3 (Scoring): score=42, suitability=PARTIALLY_SUITABLE, blockchain=Public Blockchain"
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
         ],
-        "reasons": [
-            "Automated service orchestration (weight=0.14)",
-            "Cross-organization flow context (weight=0.14)",
-            "External data flow context (weight=0.14)"
-        ]
+        "reasons": []
     },
     {
         "serviceId": "id-be4ec582-3c34-473e-bc9a-38ee4f642c7a",
@@ -322,49 +306,38 @@
         "serviceName": "Generate Invoice",
         "serviceType": "bpmn:serviceTask",
         "suitability": "NOT_SUITABLE",
-        "score": 28,
-        "hardGatePassed": true,
-        "executionMode": "HYBRID",
-        "recommendedBlockchain": "Consortium Blockchain",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
         "gateReasons": [
-            "Wust gate: shared ledger requirement met",
-            "Wust gate: multiple writers detected",
-            "Wust gate: untrusted stakeholders or private data need"
+            "Wust gate: no shared ledger requirement detected"
         ],
         "stageSummaries": [
-            "Stage 1 (Wust gate): PASS",
+            "Stage 1 (Wust gate): FAIL",
             "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=false, externalDataFlow=false, financialTask=true, approvalTask=false",
-            "Stage 3 (Scoring): score=28, suitability=NOT_SUITABLE, blockchain=Consortium Blockchain"
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
         ],
-        "reasons": [
-            "Financial transaction detected (weight=0.14)",
-            "Automated service orchestration (weight=0.14)"
-        ]
+        "reasons": []
     },
     {
         "serviceId": "id-0df793a7-3efc-4eb0-9dee-a3f45e7ff73a",
         "serviceName": "Notify Out-of-Stock for Order",
         "serviceType": "bpmn:serviceTask",
-        "suitability": "PARTIALLY_SUITABLE",
-        "score": 42,
-        "hardGatePassed": true,
-        "executionMode": "HYBRID",
-        "recommendedBlockchain": "Public Blockchain",
+        "suitability": "NOT_SUITABLE",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
         "gateReasons": [
-            "Wust gate: shared ledger requirement met",
-            "Wust gate: multiple writers detected",
-            "Wust gate: untrusted stakeholders or private data need"
+            "Wust gate: no multiple writers detected"
         ],
         "stageSummaries": [
-            "Stage 1 (Wust gate): PASS",
+            "Stage 1 (Wust gate): FAIL",
             "Stage 2 (Context): externalInteraction=true, crossOrganizationFlow=false, externalDataFlow=true, financialTask=false, approvalTask=false",
-            "Stage 3 (Scoring): score=42, suitability=PARTIALLY_SUITABLE, blockchain=Public Blockchain"
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
         ],
-        "reasons": [
-            "External interaction detected (weight=0.14)",
-            "Automated service orchestration (weight=0.14)",
-            "External data flow context (weight=0.14)"
-        ]
+        "reasons": []
     },
     {
         "serviceId": "id-774f68f1-dd03-4060-9b70-5ab44c523345",
@@ -502,31 +475,26 @@
         "serviceName": "Reserve Stock for Order",
         "serviceType": "bpmn:serviceTask",
         "suitability": "NOT_SUITABLE",
-        "score": 28,
-        "hardGatePassed": true,
-        "executionMode": "HYBRID",
-        "recommendedBlockchain": "Public Blockchain",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
         "gateReasons": [
-            "Wust gate: shared ledger requirement met",
-            "Wust gate: multiple writers detected",
-            "Wust gate: untrusted stakeholders or private data need"
+            "Wust gate: no multiple writers detected"
         ],
         "stageSummaries": [
-            "Stage 1 (Wust gate): PASS",
-            "Stage 2 (Context): externalInteraction=true, crossOrganizationFlow=false, externalDataFlow=false, financialTask=false, approvalTask=false",
-            "Stage 3 (Scoring): score=28, suitability=NOT_SUITABLE, blockchain=Public Blockchain"
+            "Stage 1 (Wust gate): FAIL",
+            "Stage 2 (Context): externalInteraction=true, crossOrganizationFlow=false, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
         ],
-        "reasons": [
-            "External interaction detected (weight=0.14)",
-            "Automated service orchestration (weight=0.14)"
-        ]
+        "reasons": []
     },
     {
         "serviceId": "id-e2a102c0-ae68-47fd-a44b-bfd8de817add",
         "serviceName": "Send Inventory Reservation Confirmation",
         "serviceType": "bpmn:serviceTask",
-        "suitability": "PARTIALLY_SUITABLE",
-        "score": 42,
+        "suitability": "BLOCKCHAIN_SUITABLE",
+        "score": 70,
         "hardGatePassed": true,
         "executionMode": "ON_CHAIN",
         "recommendedBlockchain": "Consortium Blockchain",
@@ -537,12 +505,14 @@
         ],
         "stageSummaries": [
             "Stage 1 (Wust gate): PASS",
-            "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=false, externalDataFlow=true, financialTask=false, approvalTask=true",
-            "Stage 3 (Scoring): score=42, suitability=PARTIALLY_SUITABLE, blockchain=Consortium Blockchain"
+            "Stage 2 (Context): externalInteraction=true, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=true",
+            "Stage 3 (Scoring): score=70, suitability=BLOCKCHAIN_SUITABLE, blockchain=Consortium Blockchain"
         ],
         "reasons": [
+            "External interaction detected (weight=0.14)",
             "Approval or validation workflow (weight=0.14)",
             "Automated service orchestration (weight=0.14)",
+            "Cross-organization flow context (weight=0.14)",
             "External data flow context (weight=0.14)"
         ]
     },
@@ -685,23 +655,19 @@
         "serviceName": "Update Inventory Records",
         "serviceType": "bpmn:serviceTask",
         "suitability": "NOT_SUITABLE",
-        "score": 14,
-        "hardGatePassed": true,
-        "executionMode": "HYBRID",
-        "recommendedBlockchain": "Public Blockchain",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
         "gateReasons": [
-            "Wust gate: shared ledger requirement met",
-            "Wust gate: multiple writers detected",
-            "Wust gate: untrusted stakeholders or private data need"
+            "Wust gate: no shared ledger requirement detected"
         ],
         "stageSummaries": [
-            "Stage 1 (Wust gate): PASS",
+            "Stage 1 (Wust gate): FAIL",
             "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=false, externalDataFlow=false, financialTask=false, approvalTask=false",
-            "Stage 3 (Scoring): score=14, suitability=NOT_SUITABLE, blockchain=Public Blockchain"
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
         ],
-        "reasons": [
-            "Automated service orchestration (weight=0.14)"
-        ]
+        "reasons": []
     },
     {
         "serviceId": "id-c1af007e-15d6-459a-8e3b-f5591fde4b11",
@@ -709,18 +675,16 @@
         "serviceType": "bpmn:manualTask",
         "suitability": "NOT_SUITABLE",
         "score": 0,
-        "hardGatePassed": true,
-        "executionMode": "HYBRID",
-        "recommendedBlockchain": "Public Blockchain",
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
         "gateReasons": [
-            "Wust gate: shared ledger requirement met",
-            "Wust gate: multiple writers detected",
-            "Wust gate: untrusted stakeholders or private data need"
+            "Wust gate: no shared ledger requirement detected"
         ],
         "stageSummaries": [
-            "Stage 1 (Wust gate): PASS",
+            "Stage 1 (Wust gate): FAIL",
             "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=false, externalDataFlow=false, financialTask=false, approvalTask=false",
-            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Public Blockchain"
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
         ],
         "reasons": []
     },
@@ -729,48 +693,38 @@
         "serviceName": "Prepare Shipment",
         "serviceType": "bpmn:manualTask",
         "suitability": "NOT_SUITABLE",
-        "score": 14,
-        "hardGatePassed": true,
-        "executionMode": "HYBRID",
-        "recommendedBlockchain": "Public Blockchain",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
         "gateReasons": [
-            "Wust gate: shared ledger requirement met",
-            "Wust gate: multiple writers detected",
-            "Wust gate: untrusted stakeholders or private data need"
+            "Wust gate: no shared ledger requirement detected"
         ],
         "stageSummaries": [
-            "Stage 1 (Wust gate): PASS",
+            "Stage 1 (Wust gate): FAIL",
             "Stage 2 (Context): externalInteraction=true, crossOrganizationFlow=false, externalDataFlow=false, financialTask=false, approvalTask=false",
-            "Stage 3 (Scoring): score=14, suitability=NOT_SUITABLE, blockchain=Public Blockchain"
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
         ],
-        "reasons": [
-            "External interaction detected (weight=0.14)"
-        ]
+        "reasons": []
     },
     {
         "serviceId": "id-58e6b0cb-2159-4fcc-9543-61a5bb72aae1",
         "serviceName": "Order Validation Result",
         "serviceType": "bpmn:exclusiveGateway",
-        "suitability": "PARTIALLY_SUITABLE",
-        "score": 42,
-        "hardGatePassed": true,
-        "executionMode": "ON_CHAIN",
-        "recommendedBlockchain": "Consortium Blockchain",
+        "suitability": "NOT_SUITABLE",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
         "gateReasons": [
-            "Wust gate: shared ledger requirement met",
-            "Wust gate: multiple writers detected",
-            "Wust gate: untrusted stakeholders or private data need"
+            "Wust gate: no multiple writers detected"
         ],
         "stageSummaries": [
-            "Stage 1 (Wust gate): PASS",
-            "Stage 2 (Context): externalInteraction=true, crossOrganizationFlow=false, externalDataFlow=false, financialTask=false, approvalTask=true",
-            "Stage 3 (Scoring): score=42, suitability=PARTIALLY_SUITABLE, blockchain=Consortium Blockchain"
+            "Stage 1 (Wust gate): FAIL",
+            "Stage 2 (Context): externalInteraction=true, crossOrganizationFlow=false, externalDataFlow=true, financialTask=false, approvalTask=true",
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
         ],
-        "reasons": [
-            "External interaction detected (weight=0.14)",
-            "Approval or validation workflow (weight=0.14)",
-            "Decision workflow detected (weight=0.14)"
-        ]
+        "reasons": []
     },
     {
         "serviceId": "id-1d74fed5-8852-40d1-817a-9e7a07b204f0",
@@ -802,46 +756,38 @@
         "serviceName": "Post-Processing Evaluation",
         "serviceType": "bpmn:exclusiveGateway",
         "suitability": "NOT_SUITABLE",
-        "score": 14,
-        "hardGatePassed": true,
-        "executionMode": "HYBRID",
-        "recommendedBlockchain": "Public Blockchain",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
         "gateReasons": [
-            "Wust gate: shared ledger requirement met",
-            "Wust gate: multiple writers detected",
-            "Wust gate: untrusted stakeholders or private data need"
+            "Wust gate: no shared ledger requirement detected"
         ],
         "stageSummaries": [
-            "Stage 1 (Wust gate): PASS",
+            "Stage 1 (Wust gate): FAIL",
             "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=false, externalDataFlow=false, financialTask=false, approvalTask=false",
-            "Stage 3 (Scoring): score=14, suitability=NOT_SUITABLE, blockchain=Public Blockchain"
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
         ],
-        "reasons": [
-            "Decision workflow detected (weight=0.14)"
-        ]
+        "reasons": []
     },
     {
         "serviceId": "id-829d5f8a-26b9-4a2d-99de-8a43dee3a4ee",
         "serviceName": "Stock Availability Decision",
         "serviceType": "bpmn:exclusiveGateway",
         "suitability": "NOT_SUITABLE",
-        "score": 14,
-        "hardGatePassed": true,
-        "executionMode": "HYBRID",
-        "recommendedBlockchain": "Public Blockchain",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
         "gateReasons": [
-            "Wust gate: shared ledger requirement met",
-            "Wust gate: multiple writers detected",
-            "Wust gate: untrusted stakeholders or private data need"
+            "Wust gate: no shared ledger requirement detected"
         ],
         "stageSummaries": [
-            "Stage 1 (Wust gate): PASS",
+            "Stage 1 (Wust gate): FAIL",
             "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=false, externalDataFlow=false, financialTask=false, approvalTask=false",
-            "Stage 3 (Scoring): score=14, suitability=NOT_SUITABLE, blockchain=Public Blockchain"
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
         ],
-        "reasons": [
-            "Decision workflow detected (weight=0.14)"
-        ]
+        "reasons": []
     },
     {
         "serviceId": "id-c215874d-a5e1-4978-b2c1-b22595f25734",
@@ -849,18 +795,16 @@
         "serviceType": "bpmn:parallelGateway",
         "suitability": "NOT_SUITABLE",
         "score": 0,
-        "hardGatePassed": true,
-        "executionMode": "HYBRID",
-        "recommendedBlockchain": "Public Blockchain",
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
         "gateReasons": [
-            "Wust gate: shared ledger requirement met",
-            "Wust gate: multiple writers detected",
-            "Wust gate: untrusted stakeholders or private data need"
+            "Wust gate: no shared ledger requirement detected"
         ],
         "stageSummaries": [
-            "Stage 1 (Wust gate): PASS",
+            "Stage 1 (Wust gate): FAIL",
             "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=false, externalDataFlow=false, financialTask=false, approvalTask=false",
-            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Public Blockchain"
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
         ],
         "reasons": []
     },
@@ -971,18 +915,16 @@
         "serviceType": "bpmn:startEvent",
         "suitability": "NOT_SUITABLE",
         "score": 0,
-        "hardGatePassed": true,
-        "executionMode": "HYBRID",
-        "recommendedBlockchain": "Public Blockchain",
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
         "gateReasons": [
-            "Wust gate: shared ledger requirement met",
-            "Wust gate: multiple writers detected",
-            "Wust gate: untrusted stakeholders or private data need"
+            "Wust gate: no shared ledger requirement detected"
         ],
         "stageSummaries": [
-            "Stage 1 (Wust gate): PASS",
+            "Stage 1 (Wust gate): FAIL",
             "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=false, externalDataFlow=false, financialTask=false, approvalTask=false",
-            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Public Blockchain"
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
         ],
         "reasons": []
     },
@@ -1039,53 +981,45 @@
         "serviceName": "Inventory Management Completed - Out-of-Stock",
         "serviceType": "bpmn:endEvent",
         "suitability": "NOT_SUITABLE",
-        "score": 14,
-        "hardGatePassed": true,
-        "executionMode": "HYBRID",
-        "recommendedBlockchain": "Public Blockchain",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
         "gateReasons": [
-            "Wust gate: shared ledger requirement met",
-            "Wust gate: multiple writers detected",
-            "Wust gate: untrusted stakeholders or private data need"
+            "Wust gate: trusted stakeholders with no private data need"
         ],
         "stageSummaries": [
-            "Stage 1 (Wust gate): PASS",
+            "Stage 1 (Wust gate): FAIL",
             "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=true, externalDataFlow=false, financialTask=false, approvalTask=false",
-            "Stage 3 (Scoring): score=14, suitability=NOT_SUITABLE, blockchain=Public Blockchain"
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
         ],
-        "reasons": [
-            "Cross-organization flow context (weight=0.14)"
-        ]
+        "reasons": []
     },
     {
         "serviceId": "id-9003faf6-22ee-4d22-a05c-e12a8cb20786",
         "serviceName": "Inventory Management Completed - Reserved",
         "serviceType": "bpmn:endEvent",
         "suitability": "NOT_SUITABLE",
-        "score": 14,
-        "hardGatePassed": true,
-        "executionMode": "HYBRID",
-        "recommendedBlockchain": "Public Blockchain",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
         "gateReasons": [
-            "Wust gate: shared ledger requirement met",
-            "Wust gate: multiple writers detected",
-            "Wust gate: untrusted stakeholders or private data need"
+            "Wust gate: trusted stakeholders with no private data need"
         ],
         "stageSummaries": [
-            "Stage 1 (Wust gate): PASS",
+            "Stage 1 (Wust gate): FAIL",
             "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=true, externalDataFlow=false, financialTask=false, approvalTask=false",
-            "Stage 3 (Scoring): score=14, suitability=NOT_SUITABLE, blockchain=Public Blockchain"
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
         ],
-        "reasons": [
-            "Cross-organization flow context (weight=0.14)"
-        ]
+        "reasons": []
     },
     {
         "serviceId": "id-2171b543-29fc-49b8-b06c-4a1e0a1dc6ca",
         "serviceName": "Order Management Completed - Exception",
         "serviceType": "bpmn:endEvent",
-        "suitability": "NOT_SUITABLE",
-        "score": 28,
+        "suitability": "PARTIALLY_SUITABLE",
+        "score": 42,
         "hardGatePassed": true,
         "executionMode": "HYBRID",
         "recommendedBlockchain": "Public Blockchain",
@@ -1096,20 +1030,21 @@
         ],
         "stageSummaries": [
             "Stage 1 (Wust gate): PASS",
-            "Stage 2 (Context): externalInteraction=true, crossOrganizationFlow=true, externalDataFlow=false, financialTask=false, approvalTask=false",
-            "Stage 3 (Scoring): score=28, suitability=NOT_SUITABLE, blockchain=Public Blockchain"
+            "Stage 2 (Context): externalInteraction=true, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=42, suitability=PARTIALLY_SUITABLE, blockchain=Public Blockchain"
         ],
         "reasons": [
             "External interaction detected (weight=0.14)",
-            "Cross-organization flow context (weight=0.14)"
+            "Cross-organization flow context (weight=0.14)",
+            "External data flow context (weight=0.14)"
         ]
     },
     {
         "serviceId": "id-0703d9a4-811e-49dd-abfe-6a093b59af4c",
         "serviceName": "Order Management Completed - Rejected",
         "serviceType": "bpmn:endEvent",
-        "suitability": "NOT_SUITABLE",
-        "score": 28,
+        "suitability": "PARTIALLY_SUITABLE",
+        "score": 42,
         "hardGatePassed": true,
         "executionMode": "HYBRID",
         "recommendedBlockchain": "Public Blockchain",
@@ -1120,20 +1055,21 @@
         ],
         "stageSummaries": [
             "Stage 1 (Wust gate): PASS",
-            "Stage 2 (Context): externalInteraction=true, crossOrganizationFlow=true, externalDataFlow=false, financialTask=false, approvalTask=false",
-            "Stage 3 (Scoring): score=28, suitability=NOT_SUITABLE, blockchain=Public Blockchain"
+            "Stage 2 (Context): externalInteraction=true, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=42, suitability=PARTIALLY_SUITABLE, blockchain=Public Blockchain"
         ],
         "reasons": [
             "External interaction detected (weight=0.14)",
-            "Cross-organization flow context (weight=0.14)"
+            "Cross-organization flow context (weight=0.14)",
+            "External data flow context (weight=0.14)"
         ]
     },
     {
         "serviceId": "id-247a34a5-d53a-4863-8fa5-4f4c7a42122e",
         "serviceName": "Order Management Completed - Success",
         "serviceType": "bpmn:endEvent",
-        "suitability": "NOT_SUITABLE",
-        "score": 28,
+        "suitability": "PARTIALLY_SUITABLE",
+        "score": 42,
         "hardGatePassed": true,
         "executionMode": "HYBRID",
         "recommendedBlockchain": "Public Blockchain",
@@ -1144,12 +1080,13 @@
         ],
         "stageSummaries": [
             "Stage 1 (Wust gate): PASS",
-            "Stage 2 (Context): externalInteraction=true, crossOrganizationFlow=true, externalDataFlow=false, financialTask=false, approvalTask=false",
-            "Stage 3 (Scoring): score=28, suitability=NOT_SUITABLE, blockchain=Public Blockchain"
+            "Stage 2 (Context): externalInteraction=true, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=42, suitability=PARTIALLY_SUITABLE, blockchain=Public Blockchain"
         ],
         "reasons": [
             "External interaction detected (weight=0.14)",
-            "Cross-organization flow context (weight=0.14)"
+            "Cross-organization flow context (weight=0.14)",
+            "External data flow context (weight=0.14)"
         ]
     },
     {
@@ -1182,18 +1119,16 @@
         "serviceType": "bpmn:endEvent",
         "suitability": "NOT_SUITABLE",
         "score": 0,
-        "hardGatePassed": true,
-        "executionMode": "HYBRID",
-        "recommendedBlockchain": "Public Blockchain",
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
         "gateReasons": [
-            "Wust gate: shared ledger requirement met",
-            "Wust gate: multiple writers detected",
-            "Wust gate: untrusted stakeholders or private data need"
+            "Wust gate: no shared ledger requirement detected"
         ],
         "stageSummaries": [
-            "Stage 1 (Wust gate): PASS",
+            "Stage 1 (Wust gate): FAIL",
             "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=false, externalDataFlow=false, financialTask=false, approvalTask=false",
-            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Public Blockchain"
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
         ],
         "reasons": []
     }

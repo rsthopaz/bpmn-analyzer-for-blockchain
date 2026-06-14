@@ -127,24 +127,18 @@ public class BlockchainScoringEngine {
 
         boolean sharedLedger =
             node.isExternalDataFlow()
-                || node.isCrossOrganizationFlow()
-                || context.isGraphHasExternalDataFlow()
-                || context.isGraphHasCrossOrganizationFlow();
+                || node.isCrossOrganizationFlow();
 
-        boolean multipleWriters =
-            node.isCrossOrganizationFlow()
-                || context.isGraphHasCrossOrganizationFlow();
+        boolean multipleWriters = node.isCrossOrganizationFlow();
 
-        boolean untrustedStakeholders =
-            node.isExternalInteraction()
-                || context.isGraphHasExternalInteraction();
+        boolean untrustedStakeholders = node.isExternalInteraction();
 
         boolean dataPrivate = node.isFinancialTask() || node.isApprovalTask();
 
         boolean restrictedControl = dataPrivate;
 
         boolean consortiumMaintenance =
-            restrictedControl && (node.isCrossOrganizationFlow() || context.isGraphHasCrossOrganizationFlow());
+            restrictedControl && node.isCrossOrganizationFlow();
 
         return new WustDecision(
             sharedLedger,
