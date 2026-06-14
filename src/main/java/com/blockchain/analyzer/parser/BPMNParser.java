@@ -38,8 +38,10 @@ public class BPMNParser {
                     .build();
 
             parseTasks(document, graph);
-
+            parseParticipants(document, graph);
+            parseMessageFlows(document, graph);
             parseSequenceFlows(document, graph);
+            inferFlowFlags(graph);
 
             return graph;
 
@@ -128,7 +130,7 @@ public class BPMNParser {
                               String tagName,
                               WorkflowGraph graph) {
 
-        NodeList list = document.getElementsByTagName(tagName);
+        NodeList list = getElementsByTagName(document, tagName);
 
         for (int i = 0; i < list.getLength(); i++) {
 
@@ -172,14 +174,68 @@ public class BPMNParser {
                         || lower.contains("shipment")
                         || lower.contains("delivery")
                         || lower.contains("message")
+                        || lower.contains("order")
         );
+
+        node.setExternalDataFlow(
+                lower.contains("send")
+                        || lower.contains("receive")
+                        || lower.contains("message")
+                        || lower.contains("request")
+                        || lower.contains("notify")
+                        || lower.contains("call")
+        );
+
+        node.setCrossOrganizationFlow(
+                lower.contains("customer")
+                        || lower.contains("supplier")
+                        || lower.contains("order management")
+                        || lower.contains("billing")
+                        || lower.contains("inventory management")
+                        || lower.contains("shipping")
+                        || lower.contains("delivery")
+                        || lower.contains("payment")
+                        || lower.contains("message")
+                        || lower.contains("request")
+        );
+    }
+
+    private void parseMessageFlows(Document document,
+                                   WorkflowGraph graph) {
+
+        NodeList list = getElementsByTagName(document, "bpmn:messageFlow");
+
+        for (int i = 0; i < list.getLength(); i++) {
+
+            Element element = (Element) list.item(i);
+
+            String source = element.getAttribute("sourceRef");
+            String target = element.getAttribute("targetRef");
+
+            WorkflowEdge edge = WorkflowEdge.builder()
+                    .source(source)
+                    .target(target)
+                    .type("messageFlow")
+                    .build();
+
+            graph.getEdges().add(edge);
+
+            WorkflowNode sourceNode = findNodeById(graph, source);
+            WorkflowNode targetNode = findNodeById(graph, target);
+
+            if (sourceNode != null) {
+                sourceNode.getConnectedMessageFlows().add(target);
+            }
+            if (targetNode != null) {
+                targetNode.getConnectedMessageFlows().add(source);
+            }
+        }
     }
 
     private void parseSequenceFlows(Document document,
                                     WorkflowGraph graph) {
 
-        NodeList list =
-                document.getElementsByTagName("bpmn:sequenceFlow");
+        NodeList list = getElementsByTagName(document, "bpmn:sequenceFlow");
 
         for (int i = 0; i < list.getLength(); i++) {
 
@@ -193,5 +249,102 @@ public class BPMNParser {
 
             graph.getEdges().add(edge);
         }
+    }
+
+    private void inferFlowFlags(WorkflowGraph graph) {
+
+        for (WorkflowNode node : graph.getNodes()) {
+
+            if (!node.getConnectedMessageFlows().isEmpty()) {
+                node.setExternalDataFlow(true);
+                node.setCrossOrganizationFlow(true);
+            }
+
+            for (String connectedId : node.getConnectedMessageFlows()) {
+                WorkflowNode connected = findNodeById(graph, connectedId);
+
+                if (connected == null) {
+                    continue;
+                }
+
+                String nodeParticipant = node.getParticipantName();
+                String connectedParticipant = connected.getParticipantName();
+
+                if (nodeParticipant != null
+                        && connectedParticipant != null
+                        && !nodeParticipant.isEmpty()
+                        && !connectedParticipant.isEmpty()
+                        && !nodeParticipant.equals(connectedParticipant)) {
+
+                    node.setCrossOrganizationFlow(true);
+                    connected.setCrossOrganizationFlow(true);
+                }
+            }
+        }
+    }
+
+    private WorkflowNode findNodeById(WorkflowGraph graph,
+                                      String nodeId) {
+
+        return graph.getNodes()
+                .stream()
+                .filter(node -> nodeId.equals(node.getId()))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private NodeList getElementsByTagName(Document document,
+                                         String tagName) {
+
+        NodeList list = document.getElementsByTagName(tagName);
+
+        if (list.getLength() > 0) {
+            return list;
+        }
+
+        String localName = tagName.contains(":")
+                ? tagName.substring(tagName.indexOf(":") + 1)
+                : tagName;
+
+        return document.getElementsByTagName(localName);
+    }
+
+    private void parseParticipants(Document document,
+                                   WorkflowGraph graph) {
+
+        NodeList laneList = getElementsByTagName(document, "bpmn:lane");
+
+        for (int i = 0; i < laneList.getLength(); i++) {
+
+            Element lane = (Element) laneList.item(i);
+            String laneName = lane.getAttribute("name");
+
+            NodeList refs = getElementsByTagName(lane, "bpmn:flowNodeRef");
+
+            for (int j = 0; j < refs.getLength(); j++) {
+                String nodeId = refs.item(j).getTextContent();
+                WorkflowNode node = findNodeById(graph, nodeId.trim());
+
+                if (node != null && laneName != null && !laneName.isEmpty()) {
+                    node.setParticipantName(laneName);
+                }
+            }
+        }
+    }
+
+    private NodeList getElementsByTagName(Element element,
+                                         String tagName) {
+
+        NodeList list = element.getElementsByTagName(tagName);
+
+        if (list.getLength() > 0) {
+            return list;
+        }
+
+        String localName = tagName.contains(":")
+                ? tagName.substring(tagName.indexOf(":") + 1)
+                : tagName;
+
+        return element.getElementsByTagName(localName);
     }
 }

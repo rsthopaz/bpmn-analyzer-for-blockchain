@@ -31,7 +31,7 @@ public class BlockchainScoringEngine {
         List<String> gateReasons = new ArrayList<>();
         List<String> stageSummaries = new ArrayList<>();
 
-        WustDecision decision = evaluateWustCriteria(node);
+        WustDecision decision = evaluateWustCriteria(node, context);
         boolean gatePassed = passesHardGate(decision, gateReasons);
 
         stageSummaries.add(
@@ -121,23 +121,30 @@ public class BlockchainScoringEngine {
         }
 
         private WustDecision evaluateWustCriteria(
-            WorkflowNode node
+            WorkflowNode node,
+            AssessmentContext context
         ) {
 
         boolean sharedLedger =
             node.isExternalDataFlow()
-                || node.isCrossOrganizationFlow();
+                || node.isCrossOrganizationFlow()
+                || context.isGraphHasExternalDataFlow()
+                || context.isGraphHasCrossOrganizationFlow();
 
-        boolean multipleWriters = node.isCrossOrganizationFlow();
+        boolean multipleWriters =
+            node.isCrossOrganizationFlow()
+                || context.isGraphHasCrossOrganizationFlow();
 
-        boolean untrustedStakeholders = node.isExternalInteraction();
+        boolean untrustedStakeholders =
+            node.isExternalInteraction()
+                || context.isGraphHasExternalInteraction();
 
         boolean dataPrivate = node.isFinancialTask() || node.isApprovalTask();
 
         boolean restrictedControl = dataPrivate;
 
         boolean consortiumMaintenance =
-            restrictedControl && node.isCrossOrganizationFlow();
+            restrictedControl && (node.isCrossOrganizationFlow() || context.isGraphHasCrossOrganizationFlow());
 
         return new WustDecision(
             sharedLedger,
@@ -197,7 +204,7 @@ public class BlockchainScoringEngine {
         );
 
         score += applyCriterion(
-                "serviceTask".equals(node.getType()),
+                node.getType() != null && node.getType().endsWith("serviceTask"),
                 SoftCriterion.SERVICE_AUTOMATION,
                 weights,
                 reasons,
@@ -205,7 +212,7 @@ public class BlockchainScoringEngine {
         );
 
         score += applyCriterion(
-                "exclusiveGateway".equals(node.getType()),
+                node.getType() != null && node.getType().endsWith("exclusiveGateway"),
                 SoftCriterion.DECISION_WORKFLOW,
                 weights,
                 reasons,
