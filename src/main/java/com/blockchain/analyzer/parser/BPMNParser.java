@@ -12,6 +12,13 @@ import java.io.File;
 import java.io.ByteArrayInputStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Component
 public class BPMNParser {
@@ -42,6 +49,8 @@ public class BPMNParser {
             parseMessageFlows(document, graph);
             parseSequenceFlows(document, graph);
             inferFlowFlags(graph);
+
+            deriveContextFlags(graph);
 
             return graph;
 
