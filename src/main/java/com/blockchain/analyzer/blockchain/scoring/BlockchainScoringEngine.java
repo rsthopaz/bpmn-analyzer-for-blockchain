@@ -29,9 +29,16 @@ public class BlockchainScoringEngine {
 
         List<String> reasons = new ArrayList<>();
         List<String> gateReasons = new ArrayList<>();
+        List<String> stageSummaries = new ArrayList<>();
 
         WustDecision decision = evaluateWustCriteria(node, context);
         boolean gatePassed = passesHardGate(decision, gateReasons);
+
+        stageSummaries.add(
+            "Stage 1 (Wust gate): " + (gatePassed ? "PASS" : "FAIL")
+        );
+
+        stageSummaries.add(buildContextSummary(node));
 
         if (gatePassed) {
             score = calculateSoftScore(node, reasons);
@@ -59,6 +66,12 @@ public class BlockchainScoringEngine {
             ? recommendBlockchain(decision)
             : "Not applicable";
 
+        stageSummaries.add(
+            "Stage 3 (Scoring): score=" + score
+                + ", suitability=" + suitability
+                + ", blockchain=" + blockchain
+        );
+
         return BlockchainRecommendation.builder()
                 .serviceId(node.getId())
                 .serviceName(node.getName())
@@ -69,6 +82,7 @@ public class BlockchainScoringEngine {
                 .executionMode(mode)
                 .recommendedBlockchain(blockchain)
                 .gateReasons(gateReasons)
+            .stageSummaries(stageSummaries)
                 .reasons(reasons)
                 .build();
     }
@@ -113,26 +127,18 @@ public class BlockchainScoringEngine {
 
         boolean sharedLedger =
             node.isExternalDataFlow()
-                || node.isCrossOrganizationFlow()
-                || context.isGraphHasExternalDataFlow()
-                || context.isGraphHasCrossOrganizationFlow();
+                || node.isCrossOrganizationFlow();
 
-        boolean multipleWriters =
-            node.isCrossOrganizationFlow()
-                || context.isGraphHasCrossOrganizationFlow();
+        boolean multipleWriters = node.isCrossOrganizationFlow();
 
-        boolean untrustedStakeholders =
-            node.isExternalInteraction()
-                || context.isGraphHasExternalInteraction();
+        boolean untrustedStakeholders = node.isExternalInteraction();
 
         boolean dataPrivate = node.isFinancialTask() || node.isApprovalTask();
 
         boolean restrictedControl = dataPrivate;
 
         boolean consortiumMaintenance =
-            restrictedControl
-                && (node.isCrossOrganizationFlow()
-                || context.isGraphHasCrossOrganizationFlow());
+            restrictedControl && node.isCrossOrganizationFlow();
 
         return new WustDecision(
             sharedLedger,
@@ -143,6 +149,20 @@ public class BlockchainScoringEngine {
             consortiumMaintenance
         );
         }
+
+    private String buildContextSummary(WorkflowNode node) {
+
+        return "Stage 2 (Context): externalInteraction="
+                + node.isExternalInteraction()
+                + ", crossOrganizationFlow="
+                + node.isCrossOrganizationFlow()
+                + ", externalDataFlow="
+                + node.isExternalDataFlow()
+                + ", financialTask="
+                + node.isFinancialTask()
+                + ", approvalTask="
+                + node.isApprovalTask();
+    }
 
     private int calculateSoftScore(
             WorkflowNode node,
@@ -178,7 +198,7 @@ public class BlockchainScoringEngine {
         );
 
         score += applyCriterion(
-                "serviceTask".equals(node.getType()),
+                node.getType() != null && node.getType().endsWith("serviceTask"),
                 SoftCriterion.SERVICE_AUTOMATION,
                 weights,
                 reasons,
@@ -186,7 +206,7 @@ public class BlockchainScoringEngine {
         );
 
         score += applyCriterion(
-                "exclusiveGateway".equals(node.getType()),
+                node.getType() != null && node.getType().endsWith("exclusiveGateway"),
                 SoftCriterion.DECISION_WORKFLOW,
                 weights,
                 reasons,

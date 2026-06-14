@@ -24,6 +24,13 @@ public class WorkflowNode {
     @Builder.Default
     private List<String> outgoing = new ArrayList<>();
 
+    private String participantName;
+
+    @Builder.Default
+    private List<String> connectedMessageFlows = new ArrayList<>();
+
+    private String crossOrganizationFlowReason;
+
     private boolean externalInteraction;
 
     private boolean approvalTask;

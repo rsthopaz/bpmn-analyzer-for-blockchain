@@ -45,8 +45,10 @@ public class BPMNParser {
                     .build();
 
             parseTasks(document, graph);
-
+            parseParticipants(document, graph);
+            parseMessageFlows(document, graph);
             parseSequenceFlows(document, graph);
+            inferFlowFlags(graph);
 
             deriveContextFlags(graph);
 
@@ -127,6 +129,8 @@ public class BPMNParser {
         parseElement(document, "bpmn:userTask", graph);
         parseElement(document, "bpmn:serviceTask", graph);
         parseElement(document, "bpmn:manualTask", graph);
+        parseElement(document, "bpmn:sendTask", graph);
+        parseElement(document, "bpmn:receiveTask", graph);
         parseElement(document, "bpmn:exclusiveGateway", graph);
         parseElement(document, "bpmn:parallelGateway", graph);
         parseElement(document, "bpmn:startEvent", graph);
@@ -137,7 +141,7 @@ public class BPMNParser {
                               String tagName,
                               WorkflowGraph graph) {
 
-        NodeList list = document.getElementsByTagName(tagName);
+        NodeList list = getElementsByTagName(document, tagName);
 
         for (int i = 0; i < list.getLength(); i++) {
 
@@ -181,14 +185,75 @@ public class BPMNParser {
                         || lower.contains("shipment")
                         || lower.contains("delivery")
                         || lower.contains("message")
+                        || lower.contains("order")
+                        || lower.contains("send")
+                        || lower.contains("receive")
+                        || lower.contains("callback")
         );
+
+        node.setExternalDataFlow(
+                lower.contains("send")
+                        || lower.contains("receive")
+                        || lower.contains("message")
+                        || lower.contains("request")
+                        || lower.contains("notify")
+                        || lower.contains("call")
+                        || lower.contains("data")
+                        || lower.contains("order")
+        );
+
+        node.setCrossOrganizationFlow(
+                lower.contains("customer")
+                        || lower.contains("supplier")
+                        || lower.contains("order management")
+                        || lower.contains("billing")
+                        || lower.contains("inventory management")
+                        || lower.contains("shipping")
+                        || lower.contains("delivery")
+                        || lower.contains("payment")
+                        || lower.contains("message")
+                        || lower.contains("request")
+                        || lower.contains("send")
+                        || lower.contains("receive")
+        );
+    }
+
+    private void parseMessageFlows(Document document,
+                                   WorkflowGraph graph) {
+
+        NodeList list = getElementsByTagName(document, "bpmn:messageFlow");
+
+        for (int i = 0; i < list.getLength(); i++) {
+
+            Element element = (Element) list.item(i);
+
+            String source = element.getAttribute("sourceRef");
+            String target = element.getAttribute("targetRef");
+
+            WorkflowEdge edge = WorkflowEdge.builder()
+                    .source(source)
+                    .target(target)
+                    .type("messageFlow")
+                    .build();
+
+            graph.getEdges().add(edge);
+
+            WorkflowNode sourceNode = findNodeById(graph, source);
+            WorkflowNode targetNode = findNodeById(graph, target);
+
+            if (sourceNode != null) {
+                sourceNode.getConnectedMessageFlows().add(target);
+            }
+            if (targetNode != null) {
+                targetNode.getConnectedMessageFlows().add(source);
+            }
+        }
     }
 
     private void parseSequenceFlows(Document document,
                                     WorkflowGraph graph) {
 
-        NodeList list =
-                document.getElementsByTagName("bpmn:sequenceFlow");
+        NodeList list = getElementsByTagName(document, "bpmn:sequenceFlow");
 
         for (int i = 0; i < list.getLength(); i++) {
 
@@ -204,118 +269,100 @@ public class BPMNParser {
         }
     }
 
-        private void deriveContextFlags(WorkflowGraph graph) {
+    private void inferFlowFlags(WorkflowGraph graph) {
 
-                Map<String, WorkflowNode> nodesById = new HashMap<>();
+        for (WorkflowNode node : graph.getNodes()) {
 
-                for (WorkflowNode node : graph.getNodes()) {
-                        nodesById.put(node.getId(), node);
+            if (!node.getConnectedMessageFlows().isEmpty()) {
+                node.setExternalDataFlow(true);
+                node.setCrossOrganizationFlow(true);
+            }
+
+            for (String connectedId : node.getConnectedMessageFlows()) {
+                WorkflowNode connected = findNodeById(graph, connectedId);
+
+                if (connected == null) {
+                    continue;
                 }
 
-                Map<String, List<String>> adjacency = new HashMap<>();
+                String nodeParticipant = node.getParticipantName();
+                String connectedParticipant = connected.getParticipantName();
 
-                for (WorkflowEdge edge : graph.getEdges()) {
-                        adjacency
-                                        .computeIfAbsent(edge.getSource(), key -> new ArrayList<>())
-                                        .add(edge.getTarget());
+                if (nodeParticipant != null
+                        && connectedParticipant != null
+                        && !nodeParticipant.isEmpty()
+                        && !connectedParticipant.isEmpty()
+                        && !nodeParticipant.equals(connectedParticipant)) {
+
+                    node.setCrossOrganizationFlow(true);
+                    connected.setCrossOrganizationFlow(true);
                 }
+            }
+        }
+    }
 
-                for (WorkflowNode node : graph.getNodes()) {
-                        ContextAggregation aggregation = collectReachableContext(
-                                        node.getId(),
-                                        nodesById,
-                                        adjacency
-                        );
+    private WorkflowNode findNodeById(WorkflowGraph graph,
+                                      String nodeId) {
 
-                        node.setExternalDataFlow(aggregation.hasExternalInteraction);
-                        node.setCrossOrganizationFlow(
-                                        aggregation.participantTags.size() >= 2
-                        );
-                }
+        return graph.getNodes()
+                .stream()
+                .filter(node -> nodeId.equals(node.getId()))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private NodeList getElementsByTagName(Document document,
+                                         String tagName) {
+
+        NodeList list = document.getElementsByTagName(tagName);
+
+        if (list.getLength() > 0) {
+            return list;
         }
 
-        private ContextAggregation collectReachableContext(
-                        String startId,
-                        Map<String, WorkflowNode> nodesById,
-                        Map<String, List<String>> adjacency
-        ) {
-                Set<String> visited = new HashSet<>();
-                Set<String> participantTags = new HashSet<>();
-                boolean hasExternalInteraction = false;
+        String localName = tagName.contains(":")
+                ? tagName.substring(tagName.indexOf(":") + 1)
+                : tagName;
 
-                Deque<String> stack = new ArrayDeque<>();
-                stack.push(startId);
+        return document.getElementsByTagName(localName);
+    }
 
-                while (!stack.isEmpty()) {
-                        String currentId = stack.pop();
+    private void parseParticipants(Document document,
+                                   WorkflowGraph graph) {
 
-                        if (!visited.add(currentId)) {
-                                continue;
-                        }
+        NodeList laneList = getElementsByTagName(document, "bpmn:lane");
 
-                        WorkflowNode currentNode = nodesById.get(currentId);
+        for (int i = 0; i < laneList.getLength(); i++) {
 
-                        if (currentNode != null) {
-                                participantTags.addAll(extractParticipantTags(currentNode));
+            Element lane = (Element) laneList.item(i);
+            String laneName = lane.getAttribute("name");
 
-                                if (currentNode.isExternalInteraction()) {
-                                        hasExternalInteraction = true;
-                                }
-                        }
+            NodeList refs = getElementsByTagName(lane, "bpmn:flowNodeRef");
 
-                        for (String nextId : adjacency.getOrDefault(currentId, List.of())) {
-                                stack.push(nextId);
-                        }
+            for (int j = 0; j < refs.getLength(); j++) {
+                String nodeId = refs.item(j).getTextContent();
+                WorkflowNode node = findNodeById(graph, nodeId.trim());
+
+                if (node != null && laneName != null && !laneName.isEmpty()) {
+                    node.setParticipantName(laneName);
                 }
+            }
+        }
+    }
 
-                return new ContextAggregation(participantTags, hasExternalInteraction);
+    private NodeList getElementsByTagName(Element element,
+                                         String tagName) {
+
+        NodeList list = element.getElementsByTagName(tagName);
+
+        if (list.getLength() > 0) {
+            return list;
         }
 
-        private Set<String> extractParticipantTags(WorkflowNode node) {
+        String localName = tagName.contains(":")
+                ? tagName.substring(tagName.indexOf(":") + 1)
+                : tagName;
 
-                Set<String> tags = new HashSet<>();
-
-                String lower = (node.getName() + " " + node.getType()).toLowerCase();
-
-                if (lower.contains("customer")) {
-                        tags.add("customer");
-                }
-
-                if (lower.contains("supplier") || lower.contains("vendor")) {
-                        tags.add("supplier");
-                }
-
-                if (lower.contains("partner")) {
-                        tags.add("partner");
-                }
-
-                if (lower.contains("regulator") || lower.contains("auditor")) {
-                        tags.add("regulator");
-                }
-
-                if (lower.contains("shipper") || lower.contains("logistics")) {
-                        tags.add("shipper");
-                }
-
-                if (node.isExternalInteraction()) {
-                        tags.add("external");
-                }
-
-                return tags;
-        }
-
-        private static class ContextAggregation {
-
-                private final Set<String> participantTags;
-
-                private final boolean hasExternalInteraction;
-
-                private ContextAggregation(
-                                Set<String> participantTags,
-                                boolean hasExternalInteraction
-                ) {
-                        this.participantTags = participantTags;
-                        this.hasExternalInteraction = hasExternalInteraction;
-                }
-        }
+        return element.getElementsByTagName(localName);
+    }
 }
