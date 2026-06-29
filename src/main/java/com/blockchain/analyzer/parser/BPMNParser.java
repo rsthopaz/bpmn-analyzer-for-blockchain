@@ -35,24 +35,34 @@ public class BPMNParser {
             DocumentBuilder builder =
                     factory.newDocumentBuilder();
 
-            Document document = parseDocument(builder, input);
+                Document document = parseDocument(builder, input);
 
-            document.getDocumentElement().normalize();
+                document.getDocumentElement().normalize();
 
-            WorkflowGraph graph = WorkflowGraph.builder()
+                // Detect XPDL package root and handle basic XPDL -> internal graph mapping
+                String rootLocal = document.getDocumentElement().getLocalName();
+
+                WorkflowGraph graph = WorkflowGraph.builder()
                     .nodes(new ArrayList<>())
                     .edges(new ArrayList<>())
                     .build();
 
-            parseTasks(document, graph);
-            parseParticipants(document, graph);
-            parseMessageFlows(document, graph);
-            parseSequenceFlows(document, graph);
-            inferFlowFlags(graph);
+                if ("Package".equals(rootLocal)) {
+                parseXPDL(document, graph);
+                inferFlowFlags(graph);
+                return graph;
+                }
 
-            deriveContextFlags(graph);
+                // Default: assume BPMN XML
+                parseTasks(document, graph);
+                parseParticipants(document, graph);
+                parseMessageFlows(document, graph);
+                parseSequenceFlows(document, graph);
+                inferFlowFlags(graph);
 
-            return graph;
+                // deriveContextFlags(graph);
+
+                return graph;
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -262,6 +272,40 @@ public class BPMNParser {
             WorkflowEdge edge = WorkflowEdge.builder()
                     .source(element.getAttribute("sourceRef"))
                     .target(element.getAttribute("targetRef"))
+                    .type("sequenceFlow")
+                    .build();
+
+            graph.getEdges().add(edge);
+        }
+    }
+
+    private void parseXPDL(Document document,
+                           WorkflowGraph graph) {
+
+        // Activities -> nodes
+        NodeList activities = getElementsByTagName(document, "Activity");
+
+        for (int i = 0; i < activities.getLength(); i++) {
+            Element act = (Element) activities.item(i);
+            String id = act.getAttribute("Id");
+            String name = act.getAttribute("Name");
+
+            WorkflowNode node = WorkflowNode.create(id, name, "xpdl:activity");
+            enrichNode(node, name, "xpdl:activity");
+            graph.getNodes().add(node);
+        }
+
+        // Transitions -> sequence flows
+        NodeList transitions = getElementsByTagName(document, "Transition");
+
+        for (int i = 0; i < transitions.getLength(); i++) {
+            Element t = (Element) transitions.item(i);
+            String from = t.getAttribute("From");
+            String to = t.getAttribute("To");
+
+            WorkflowEdge edge = WorkflowEdge.builder()
+                    .source(from)
+                    .target(to)
                     .type("sequenceFlow")
                     .build();
 
