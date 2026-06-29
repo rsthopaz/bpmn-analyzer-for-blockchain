@@ -281,6 +281,35 @@ public class BPMNParser {
 
     private void parseXPDL(Document document,
                            WorkflowGraph graph) {
+        // Map Pools -> Process id (Pool.Process attribute)
+        Map<String, String> processToPool = new HashMap<>();
+        NodeList pools = getElementsByTagName(document, "Pool");
+
+        for (int i = 0; i < pools.getLength(); i++) {
+            Element pool = (Element) pools.item(i);
+            String processRef = pool.getAttribute("Process");
+            String poolName = pool.getAttribute("Name");
+            if (processRef != null && !processRef.isEmpty()) {
+                processToPool.put(processRef, poolName);
+            }
+        }
+
+        // Find WorkflowProcesses that reference external data (DataStoreReferences / DataAssociations)
+        Set<String> processesWithExternal = new HashSet<>();
+        NodeList workflowProcesses = getElementsByTagName(document, "WorkflowProcess");
+
+        for (int i = 0; i < workflowProcesses.getLength(); i++) {
+            Element wp = (Element) workflowProcesses.item(i);
+            String pid = wp.getAttribute("Id");
+
+            NodeList dsRefs = getElementsByTagName(wp, "DataStoreReference");
+            NodeList dataAssocs = getElementsByTagName(wp, "DataAssociation");
+
+            if ((dsRefs != null && dsRefs.getLength() > 0)
+                    || (dataAssocs != null && dataAssocs.getLength() > 0)) {
+                processesWithExternal.add(pid);
+            }
+        }
 
         // Activities -> nodes
         NodeList activities = getElementsByTagName(document, "Activity");
@@ -292,6 +321,30 @@ public class BPMNParser {
 
             WorkflowNode node = WorkflowNode.create(id, name, "xpdl:activity");
             enrichNode(node, name, "xpdl:activity");
+
+            // Attempt to determine containing WorkflowProcess for participant assignment
+            String participant = null;
+            Node parent = act.getParentNode();
+            while (parent != null && parent.getNodeType() == Node.ELEMENT_NODE) {
+                Element p = (Element) parent;
+                if ("WorkflowProcess".equals(p.getLocalName()) || "WorkflowProcess".equals(p.getNodeName())) {
+                    String pid = p.getAttribute("Id");
+                    participant = processToPool.get(pid);
+
+                    if (processesWithExternal.contains(pid)) {
+                        node.setExternalDataFlow(true);
+                        node.setCrossOrganizationFlow(true);
+                    }
+
+                    break;
+                }
+                parent = parent.getParentNode();
+            }
+
+            if (participant != null && !participant.isEmpty()) {
+                node.setParticipantName(participant);
+            }
+
             graph.getNodes().add(node);
         }
 

@@ -1,291 +1,325 @@
 [
-  {
-    "serviceId": "92cb515c-ae81-4364-a587-772f1bcc50f5",
-    "serviceName": "",
-    "serviceType": "xpdl:activity",
-    "suitability": "NOT_SUITABLE",
-    "score": 0,
-    "hardGatePassed": false,
-    "executionMode": "OFF_CHAIN",
-    "recommendedBlockchain": "Not applicable",
-    "gateReasons": ["Wust gate: no shared ledger requirement detected"],
-    "stageSummaries": [
-      "Stage 1 (Wust gate): FAIL",
-      "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=false, externalDataFlow=false, financialTask=false, approvalTask=false",
-      "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
-    ],
-    "reasons": []
-  },
-  {
-    "serviceId": "8d8ff637-b07c-4252-a38a-d6864657c6a7",
-    "serviceName": "Wants to make a referral for a patient",
-    "serviceType": "xpdl:activity",
-    "suitability": "NOT_SUITABLE",
-    "score": 0,
-    "hardGatePassed": false,
-    "executionMode": "OFF_CHAIN",
-    "recommendedBlockchain": "Not applicable",
-    "gateReasons": ["Wust gate: no shared ledger requirement detected"],
-    "stageSummaries": [
-      "Stage 1 (Wust gate): FAIL",
-      "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=false, externalDataFlow=false, financialTask=false, approvalTask=false",
-      "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
-    ],
-    "reasons": []
-  },
-  {
-    "serviceId": "b95890b5-92e4-432a-b709-a96b40733427",
-    "serviceName": "Displays the query results to a table in the form",
-    "serviceType": "xpdl:activity",
-    "suitability": "NOT_SUITABLE",
-    "score": 0,
-    "hardGatePassed": false,
-    "executionMode": "OFF_CHAIN",
-    "recommendedBlockchain": "Not applicable",
-    "gateReasons": ["Wust gate: no shared ledger requirement detected"],
-    "stageSummaries": [
-      "Stage 1 (Wust gate): FAIL",
-      "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=false, externalDataFlow=false, financialTask=false, approvalTask=false",
-      "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
-    ],
-    "reasons": []
-  },
-  {
-    "serviceId": "baf5345e-3bb0-4235-bb5f-c58fa8217646",
-    "serviceName": "Displays the patient referral register form",
-    "serviceType": "xpdl:activity",
-    "suitability": "NOT_SUITABLE",
-    "score": 0,
-    "hardGatePassed": false,
-    "executionMode": "OFF_CHAIN",
-    "recommendedBlockchain": "Not applicable",
-    "gateReasons": ["Wust gate: no shared ledger requirement detected"],
-    "stageSummaries": [
-      "Stage 1 (Wust gate): FAIL",
-      "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=false, externalDataFlow=false, financialTask=false, approvalTask=false",
-      "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
-    ],
-    "reasons": []
-  },
-  {
-    "serviceId": "b210868a-cf5c-4157-b86e-b21d426d3851",
-    "serviceName": "",
-    "serviceType": "xpdl:activity",
-    "suitability": "NOT_SUITABLE",
-    "score": 0,
-    "hardGatePassed": false,
-    "executionMode": "OFF_CHAIN",
-    "recommendedBlockchain": "Not applicable",
-    "gateReasons": ["Wust gate: no shared ledger requirement detected"],
-    "stageSummaries": [
-      "Stage 1 (Wust gate): FAIL",
-      "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=false, externalDataFlow=false, financialTask=false, approvalTask=false",
-      "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
-    ],
-    "reasons": []
-  },
-  {
-    "serviceId": "2abd38cd-38a2-4b76-bac6-7cafb8659035",
-    "serviceName": "",
-    "serviceType": "xpdl:activity",
-    "suitability": "NOT_SUITABLE",
-    "score": 0,
-    "hardGatePassed": false,
-    "executionMode": "OFF_CHAIN",
-    "recommendedBlockchain": "Not applicable",
-    "gateReasons": ["Wust gate: no shared ledger requirement detected"],
-    "stageSummaries": [
-      "Stage 1 (Wust gate): FAIL",
-      "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=false, externalDataFlow=false, financialTask=false, approvalTask=false",
-      "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
-    ],
-    "reasons": []
-  },
-  {
-    "serviceId": "0a7a1082-affb-4bc8-bfb1-91f073d72dde",
-    "serviceName": "Enters the medical record ID",
-    "serviceType": "xpdl:activity",
-    "suitability": "NOT_SUITABLE",
-    "score": 0,
-    "hardGatePassed": false,
-    "executionMode": "OFF_CHAIN",
-    "recommendedBlockchain": "Not applicable",
-    "gateReasons": ["Wust gate: no shared ledger requirement detected"],
-    "stageSummaries": [
-      "Stage 1 (Wust gate): FAIL",
-      "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=false, externalDataFlow=false, financialTask=false, approvalTask=false",
-      "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
-    ],
-    "reasons": []
-  },
-  {
-    "serviceId": "082521f7-2373-493e-b116-ed46f8443646",
-    "serviceName": "Searches for patient data in the Registration and Patient database",
-    "serviceType": "xpdl:activity",
-    "suitability": "NOT_SUITABLE",
-    "score": 0,
-    "hardGatePassed": false,
-    "executionMode": "OFF_CHAIN",
-    "recommendedBlockchain": "Not applicable",
-    "gateReasons": ["Wust gate: no multiple writers detected"],
-    "stageSummaries": [
-      "Stage 1 (Wust gate): FAIL",
-      "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=false, externalDataFlow=true, financialTask=false, approvalTask=false",
-      "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
-    ],
-    "reasons": []
-  },
-  {
-    "serviceId": "8a71f31d-70b3-48c5-bc2c-eea96af4d56f",
-    "serviceName": "",
-    "serviceType": "xpdl:activity",
-    "suitability": "NOT_SUITABLE",
-    "score": 0,
-    "hardGatePassed": false,
-    "executionMode": "OFF_CHAIN",
-    "recommendedBlockchain": "Not applicable",
-    "gateReasons": ["Wust gate: no shared ledger requirement detected"],
-    "stageSummaries": [
-      "Stage 1 (Wust gate): FAIL",
-      "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=false, externalDataFlow=false, financialTask=false, approvalTask=false",
-      "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
-    ],
-    "reasons": []
-  },
-  {
-    "serviceId": "7bcfb632-b79c-4c0f-b3d7-4da10fd0b486",
-    "serviceName": "",
-    "serviceType": "xpdl:activity",
-    "suitability": "NOT_SUITABLE",
-    "score": 0,
-    "hardGatePassed": false,
-    "executionMode": "OFF_CHAIN",
-    "recommendedBlockchain": "Not applicable",
-    "gateReasons": ["Wust gate: no shared ledger requirement detected"],
-    "stageSummaries": [
-      "Stage 1 (Wust gate): FAIL",
-      "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=false, externalDataFlow=false, financialTask=false, approvalTask=false",
-      "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
-    ],
-    "reasons": []
-  },
-  {
-    "serviceId": "3235ee2f-4189-4f3b-9d05-74b9f948cab6",
-    "serviceName": "",
-    "serviceType": "xpdl:activity",
-    "suitability": "NOT_SUITABLE",
-    "score": 0,
-    "hardGatePassed": false,
-    "executionMode": "OFF_CHAIN",
-    "recommendedBlockchain": "Not applicable",
-    "gateReasons": ["Wust gate: no shared ledger requirement detected"],
-    "stageSummaries": [
-      "Stage 1 (Wust gate): FAIL",
-      "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=false, externalDataFlow=false, financialTask=false, approvalTask=false",
-      "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
-    ],
-    "reasons": []
-  },
-  {
-    "serviceId": "778fd50a-2f20-4db3-9a8b-ea705dc632c1",
-    "serviceName": "Includes the purpose of referral, medical information ",
-    "serviceType": "xpdl:activity",
-    "suitability": "NOT_SUITABLE",
-    "score": 0,
-    "hardGatePassed": false,
-    "executionMode": "OFF_CHAIN",
-    "recommendedBlockchain": "Not applicable",
-    "gateReasons": ["Wust gate: no shared ledger requirement detected"],
-    "stageSummaries": [
-      "Stage 1 (Wust gate): FAIL",
-      "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=false, externalDataFlow=false, financialTask=false, approvalTask=false",
-      "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
-    ],
-    "reasons": []
-  },
-  {
-    "serviceId": "c6815450-54fd-4592-9eeb-601519bfbf6e",
-    "serviceName": "Selects the save button",
-    "serviceType": "xpdl:activity",
-    "suitability": "NOT_SUITABLE",
-    "score": 0,
-    "hardGatePassed": false,
-    "executionMode": "OFF_CHAIN",
-    "recommendedBlockchain": "Not applicable",
-    "gateReasons": ["Wust gate: no shared ledger requirement detected"],
-    "stageSummaries": [
-      "Stage 1 (Wust gate): FAIL",
-      "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=false, externalDataFlow=false, financialTask=false, approvalTask=false",
-      "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
-    ],
-    "reasons": []
-  },
-  {
-    "serviceId": "c4d65e81-c03c-4448-b16e-30e66f1889ea",
-    "serviceName": "",
-    "serviceType": "xpdl:activity",
-    "suitability": "NOT_SUITABLE",
-    "score": 0,
-    "hardGatePassed": false,
-    "executionMode": "OFF_CHAIN",
-    "recommendedBlockchain": "Not applicable",
-    "gateReasons": ["Wust gate: no shared ledger requirement detected"],
-    "stageSummaries": [
-      "Stage 1 (Wust gate): FAIL",
-      "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=false, externalDataFlow=false, financialTask=false, approvalTask=false",
-      "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
-    ],
-    "reasons": []
-  },
-  {
-    "serviceId": "9c963f34-35a8-4ab8-94a1-4defe8d8b156",
-    "serviceName": "Saves the referral information ",
-    "serviceType": "xpdl:activity",
-    "suitability": "NOT_SUITABLE",
-    "score": 0,
-    "hardGatePassed": false,
-    "executionMode": "OFF_CHAIN",
-    "recommendedBlockchain": "Not applicable",
-    "gateReasons": ["Wust gate: no shared ledger requirement detected"],
-    "stageSummaries": [
-      "Stage 1 (Wust gate): FAIL",
-      "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=false, externalDataFlow=false, financialTask=false, approvalTask=false",
-      "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
-    ],
-    "reasons": []
-  },
-  {
-    "serviceId": "6fe753e9-ea2f-4694-a19f-d7585b540d01",
-    "serviceName": "",
-    "serviceType": "xpdl:activity",
-    "suitability": "NOT_SUITABLE",
-    "score": 0,
-    "hardGatePassed": false,
-    "executionMode": "OFF_CHAIN",
-    "recommendedBlockchain": "Not applicable",
-    "gateReasons": ["Wust gate: no shared ledger requirement detected"],
-    "stageSummaries": [
-      "Stage 1 (Wust gate): FAIL",
-      "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=false, externalDataFlow=false, financialTask=false, approvalTask=false",
-      "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
-    ],
-    "reasons": []
-  },
-  {
-    "serviceId": "38ada1a8-1ff3-4a02-b155-89ffdf90d576",
-    "serviceName": "Sets all information to blank",
-    "serviceType": "xpdl:activity",
-    "suitability": "NOT_SUITABLE",
-    "score": 0,
-    "hardGatePassed": false,
-    "executionMode": "OFF_CHAIN",
-    "recommendedBlockchain": "Not applicable",
-    "gateReasons": ["Wust gate: no shared ledger requirement detected"],
-    "stageSummaries": [
-      "Stage 1 (Wust gate): FAIL",
-      "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=false, externalDataFlow=false, financialTask=false, approvalTask=false",
-      "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
-    ],
-    "reasons": []
-  }
+    {
+        "serviceId": "92cb515c-ae81-4364-a587-772f1bcc50f5",
+        "serviceName": "",
+        "serviceType": "xpdl:activity",
+        "suitability": "NOT_SUITABLE",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
+        "gateReasons": [
+            "Wust gate: trusted stakeholders with no private data need"
+        ],
+        "stageSummaries": [
+            "Stage 1 (Wust gate): FAIL",
+            "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
+        ],
+        "reasons": []
+    },
+    {
+        "serviceId": "8d8ff637-b07c-4252-a38a-d6864657c6a7",
+        "serviceName": "Wants to make a referral for a patient",
+        "serviceType": "xpdl:activity",
+        "suitability": "NOT_SUITABLE",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
+        "gateReasons": [
+            "Wust gate: trusted stakeholders with no private data need"
+        ],
+        "stageSummaries": [
+            "Stage 1 (Wust gate): FAIL",
+            "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
+        ],
+        "reasons": []
+    },
+    {
+        "serviceId": "b95890b5-92e4-432a-b709-a96b40733427",
+        "serviceName": "Displays the query results to a table in the form",
+        "serviceType": "xpdl:activity",
+        "suitability": "NOT_SUITABLE",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
+        "gateReasons": [
+            "Wust gate: trusted stakeholders with no private data need"
+        ],
+        "stageSummaries": [
+            "Stage 1 (Wust gate): FAIL",
+            "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
+        ],
+        "reasons": []
+    },
+    {
+        "serviceId": "baf5345e-3bb0-4235-bb5f-c58fa8217646",
+        "serviceName": "Displays the patient referral register form",
+        "serviceType": "xpdl:activity",
+        "suitability": "NOT_SUITABLE",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
+        "gateReasons": [
+            "Wust gate: trusted stakeholders with no private data need"
+        ],
+        "stageSummaries": [
+            "Stage 1 (Wust gate): FAIL",
+            "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
+        ],
+        "reasons": []
+    },
+    {
+        "serviceId": "b210868a-cf5c-4157-b86e-b21d426d3851",
+        "serviceName": "",
+        "serviceType": "xpdl:activity",
+        "suitability": "NOT_SUITABLE",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
+        "gateReasons": [
+            "Wust gate: trusted stakeholders with no private data need"
+        ],
+        "stageSummaries": [
+            "Stage 1 (Wust gate): FAIL",
+            "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
+        ],
+        "reasons": []
+    },
+    {
+        "serviceId": "2abd38cd-38a2-4b76-bac6-7cafb8659035",
+        "serviceName": "",
+        "serviceType": "xpdl:activity",
+        "suitability": "NOT_SUITABLE",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
+        "gateReasons": [
+            "Wust gate: trusted stakeholders with no private data need"
+        ],
+        "stageSummaries": [
+            "Stage 1 (Wust gate): FAIL",
+            "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
+        ],
+        "reasons": []
+    },
+    {
+        "serviceId": "0a7a1082-affb-4bc8-bfb1-91f073d72dde",
+        "serviceName": "Enters the medical record ID",
+        "serviceType": "xpdl:activity",
+        "suitability": "NOT_SUITABLE",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
+        "gateReasons": [
+            "Wust gate: trusted stakeholders with no private data need"
+        ],
+        "stageSummaries": [
+            "Stage 1 (Wust gate): FAIL",
+            "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
+        ],
+        "reasons": []
+    },
+    {
+        "serviceId": "082521f7-2373-493e-b116-ed46f8443646",
+        "serviceName": "Searches for patient data in the Registration and Patient database",
+        "serviceType": "xpdl:activity",
+        "suitability": "NOT_SUITABLE",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
+        "gateReasons": [
+            "Wust gate: trusted stakeholders with no private data need"
+        ],
+        "stageSummaries": [
+            "Stage 1 (Wust gate): FAIL",
+            "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
+        ],
+        "reasons": []
+    },
+    {
+        "serviceId": "8a71f31d-70b3-48c5-bc2c-eea96af4d56f",
+        "serviceName": "",
+        "serviceType": "xpdl:activity",
+        "suitability": "NOT_SUITABLE",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
+        "gateReasons": [
+            "Wust gate: trusted stakeholders with no private data need"
+        ],
+        "stageSummaries": [
+            "Stage 1 (Wust gate): FAIL",
+            "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
+        ],
+        "reasons": []
+    },
+    {
+        "serviceId": "7bcfb632-b79c-4c0f-b3d7-4da10fd0b486",
+        "serviceName": "",
+        "serviceType": "xpdl:activity",
+        "suitability": "NOT_SUITABLE",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
+        "gateReasons": [
+            "Wust gate: trusted stakeholders with no private data need"
+        ],
+        "stageSummaries": [
+            "Stage 1 (Wust gate): FAIL",
+            "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
+        ],
+        "reasons": []
+    },
+    {
+        "serviceId": "3235ee2f-4189-4f3b-9d05-74b9f948cab6",
+        "serviceName": "",
+        "serviceType": "xpdl:activity",
+        "suitability": "NOT_SUITABLE",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
+        "gateReasons": [
+            "Wust gate: trusted stakeholders with no private data need"
+        ],
+        "stageSummaries": [
+            "Stage 1 (Wust gate): FAIL",
+            "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
+        ],
+        "reasons": []
+    },
+    {
+        "serviceId": "778fd50a-2f20-4db3-9a8b-ea705dc632c1",
+        "serviceName": "Includes the purpose of referral, medical information ",
+        "serviceType": "xpdl:activity",
+        "suitability": "NOT_SUITABLE",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
+        "gateReasons": [
+            "Wust gate: trusted stakeholders with no private data need"
+        ],
+        "stageSummaries": [
+            "Stage 1 (Wust gate): FAIL",
+            "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
+        ],
+        "reasons": []
+    },
+    {
+        "serviceId": "c6815450-54fd-4592-9eeb-601519bfbf6e",
+        "serviceName": "Selects the save button",
+        "serviceType": "xpdl:activity",
+        "suitability": "NOT_SUITABLE",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
+        "gateReasons": [
+            "Wust gate: trusted stakeholders with no private data need"
+        ],
+        "stageSummaries": [
+            "Stage 1 (Wust gate): FAIL",
+            "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
+        ],
+        "reasons": []
+    },
+    {
+        "serviceId": "c4d65e81-c03c-4448-b16e-30e66f1889ea",
+        "serviceName": "",
+        "serviceType": "xpdl:activity",
+        "suitability": "NOT_SUITABLE",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
+        "gateReasons": [
+            "Wust gate: trusted stakeholders with no private data need"
+        ],
+        "stageSummaries": [
+            "Stage 1 (Wust gate): FAIL",
+            "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
+        ],
+        "reasons": []
+    },
+    {
+        "serviceId": "9c963f34-35a8-4ab8-94a1-4defe8d8b156",
+        "serviceName": "Saves the referral information ",
+        "serviceType": "xpdl:activity",
+        "suitability": "NOT_SUITABLE",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
+        "gateReasons": [
+            "Wust gate: trusted stakeholders with no private data need"
+        ],
+        "stageSummaries": [
+            "Stage 1 (Wust gate): FAIL",
+            "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
+        ],
+        "reasons": []
+    },
+    {
+        "serviceId": "6fe753e9-ea2f-4694-a19f-d7585b540d01",
+        "serviceName": "",
+        "serviceType": "xpdl:activity",
+        "suitability": "NOT_SUITABLE",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
+        "gateReasons": [
+            "Wust gate: trusted stakeholders with no private data need"
+        ],
+        "stageSummaries": [
+            "Stage 1 (Wust gate): FAIL",
+            "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
+        ],
+        "reasons": []
+    },
+    {
+        "serviceId": "38ada1a8-1ff3-4a02-b155-89ffdf90d576",
+        "serviceName": "Sets all information to blank",
+        "serviceType": "xpdl:activity",
+        "suitability": "NOT_SUITABLE",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
+        "gateReasons": [
+            "Wust gate: trusted stakeholders with no private data need"
+        ],
+        "stageSummaries": [
+            "Stage 1 (Wust gate): FAIL",
+            "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
+        ],
+        "reasons": []
+    }
 ]
