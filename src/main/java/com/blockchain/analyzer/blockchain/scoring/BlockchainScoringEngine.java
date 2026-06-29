@@ -125,15 +125,18 @@ public class BlockchainScoringEngine {
             AssessmentContext context
         ) {
 
-        boolean sharedLedger =
-            node.isExternalDataFlow()
-                || node.isCrossOrganizationFlow();
+            boolean sharedLedger =
+                node.isExternalDataFlow()
+                    || node.isCrossOrganizationFlow();
 
-        boolean multipleWriters = node.isCrossOrganizationFlow();
+            boolean multipleWriters = node.isCrossOrganizationFlow();
 
-        boolean untrustedStakeholders = node.isExternalInteraction();
+            boolean untrustedStakeholders = node.isExternalInteraction();
 
-        boolean dataPrivate = node.isFinancialTask() || node.isApprovalTask();
+            // Treat processes involving financial/approval tasks or sensitive personal/medical data as private
+            boolean dataPrivate = node.isFinancialTask()
+                    || node.isApprovalTask()
+                    || containsSensitiveData(node.getName());
 
         boolean restrictedControl = dataPrivate;
 
@@ -149,6 +152,22 @@ public class BlockchainScoringEngine {
             consortiumMaintenance
         );
         }
+
+    private boolean containsSensitiveData(String name) {
+        if (name == null) return false;
+
+        String lower = name.toLowerCase();
+
+        return lower.contains("patient")
+                || lower.contains("medical")
+                || lower.contains("health")
+                || lower.contains("record")
+                || lower.contains("ssn")
+                || lower.contains("identity")
+                || lower.contains("personal")
+                || lower.contains("referral")
+                || lower.contains("registration");
+    }
 
     private String buildContextSummary(WorkflowNode node) {
 

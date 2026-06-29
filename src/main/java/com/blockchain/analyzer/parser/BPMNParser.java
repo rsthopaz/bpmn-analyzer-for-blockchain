@@ -226,6 +226,31 @@ public class BPMNParser {
                         || lower.contains("send")
                         || lower.contains("receive")
         );
+
+                // Additional healthcare / referral related keywords to detect external stakeholders
+                if (!node.isExternalInteraction()) {
+                    node.setExternalInteraction(
+                        lower.contains("referral")
+                            || lower.contains("patient")
+                            || lower.contains("hospital")
+                            || lower.contains("clinic")
+                            || lower.contains("provider")
+                            || lower.contains("doctor")
+                            || lower.contains("nurse")
+                            || lower.contains("registration")
+                            || lower.contains("medical")
+                    );
+                }
+
+                if (!node.isCrossOrganizationFlow()) {
+                    node.setCrossOrganizationFlow(
+                        lower.contains("referral")
+                            || lower.contains("patient")
+                            || lower.contains("hospital")
+                            || lower.contains("clinic")
+                            || lower.contains("provider")
+                    );
+                }
     }
 
     private void parseMessageFlows(Document document,

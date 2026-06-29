@@ -1,0 +1,103 @@
+[
+    {
+        "serviceId": "92cb515c-ae81-4364-a587-772f1bcc50f5",
+        "serviceName": "",
+        "serviceType": "xpdl:activity",
+        "suitability": "NOT_SUITABLE",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
+        "gateReasons": [
+            "Wust gate: trusted stakeholders with no private data need"
+        ],
+        "stageSummaries": [
+            "Stage 1 (Wust gate): FAIL",
+            "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
+        ],
+        "reasons": []
+    },
+    {
+        "serviceId": "8d8ff637-b07c-4252-a38a-d6864657c6a7",
+        "serviceName": "Wants to View Today Triage results",
+        "serviceType": "xpdl:activity",
+        "suitability": "NOT_SUITABLE",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
+        "gateReasons": [
+            "Wust gate: trusted stakeholders with no private data need"
+        ],
+        "stageSummaries": [
+            "Stage 1 (Wust gate): FAIL",
+            "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
+        ],
+        "reasons": []
+    },
+    {
+        "serviceId": "b95890b5-92e4-432a-b709-a96b40733427",
+        "serviceName": "Displays the query results to a table in the form",
+        "serviceType": "xpdl:activity",
+        "suitability": "NOT_SUITABLE",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
+        "gateReasons": [
+            "Wust gate: trusted stakeholders with no private data need"
+        ],
+        "stageSummaries": [
+            "Stage 1 (Wust gate): FAIL",
+            "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
+        ],
+        "reasons": []
+    },
+    {
+        "serviceId": "baf5345e-3bb0-4235-bb5f-c58fa8217646",
+        "serviceName": "Queries the Triage and Registration database",
+        "serviceType": "xpdl:activity",
+        "suitability": "PARTIALLY_SUITABLE",
+        "score": 42,
+        "hardGatePassed": true,
+        "executionMode": "HYBRID",
+        "recommendedBlockchain": "Consortium Blockchain",
+        "gateReasons": [
+            "Wust gate: shared ledger requirement met",
+            "Wust gate: multiple writers detected",
+            "Wust gate: untrusted stakeholders or private data need"
+        ],
+        "stageSummaries": [
+            "Stage 1 (Wust gate): PASS",
+            "Stage 2 (Context): externalInteraction=true, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=42, suitability=PARTIALLY_SUITABLE, blockchain=Consortium Blockchain"
+        ],
+        "reasons": [
+            "External interaction detected (weight=0.14)",
+            "Cross-organization flow context (weight=0.14)",
+            "External data flow context (weight=0.14)"
+        ]
+    },
+    {
+        "serviceId": "b210868a-cf5c-4157-b86e-b21d426d3851",
+        "serviceName": "",
+        "serviceType": "xpdl:activity",
+        "suitability": "NOT_SUITABLE",
+        "score": 0,
+        "hardGatePassed": false,
+        "executionMode": "OFF_CHAIN",
+        "recommendedBlockchain": "Not applicable",
+        "gateReasons": [
+            "Wust gate: trusted stakeholders with no private data need"
+        ],
+        "stageSummaries": [
+            "Stage 1 (Wust gate): FAIL",
+            "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
+        ],
+        "reasons": []
+    }
+]

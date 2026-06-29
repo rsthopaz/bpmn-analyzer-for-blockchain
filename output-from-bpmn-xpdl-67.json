@@ -22,20 +22,26 @@
         "serviceId": "8d8ff637-b07c-4252-a38a-d6864657c6a7",
         "serviceName": "Wants to make a referral for a patient",
         "serviceType": "xpdl:activity",
-        "suitability": "NOT_SUITABLE",
-        "score": 0,
-        "hardGatePassed": false,
-        "executionMode": "OFF_CHAIN",
-        "recommendedBlockchain": "Not applicable",
+        "suitability": "PARTIALLY_SUITABLE",
+        "score": 42,
+        "hardGatePassed": true,
+        "executionMode": "HYBRID",
+        "recommendedBlockchain": "Consortium Blockchain",
         "gateReasons": [
-            "Wust gate: trusted stakeholders with no private data need"
+            "Wust gate: shared ledger requirement met",
+            "Wust gate: multiple writers detected",
+            "Wust gate: untrusted stakeholders or private data need"
         ],
         "stageSummaries": [
-            "Stage 1 (Wust gate): FAIL",
-            "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
-            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
+            "Stage 1 (Wust gate): PASS",
+            "Stage 2 (Context): externalInteraction=true, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=42, suitability=PARTIALLY_SUITABLE, blockchain=Consortium Blockchain"
         ],
-        "reasons": []
+        "reasons": [
+            "External interaction detected (weight=0.14)",
+            "Cross-organization flow context (weight=0.14)",
+            "External data flow context (weight=0.14)"
+        ]
     },
     {
         "serviceId": "b95890b5-92e4-432a-b709-a96b40733427",
@@ -60,20 +66,26 @@
         "serviceId": "baf5345e-3bb0-4235-bb5f-c58fa8217646",
         "serviceName": "Displays the patient referral register form",
         "serviceType": "xpdl:activity",
-        "suitability": "NOT_SUITABLE",
-        "score": 0,
-        "hardGatePassed": false,
-        "executionMode": "OFF_CHAIN",
-        "recommendedBlockchain": "Not applicable",
+        "suitability": "PARTIALLY_SUITABLE",
+        "score": 42,
+        "hardGatePassed": true,
+        "executionMode": "HYBRID",
+        "recommendedBlockchain": "Consortium Blockchain",
         "gateReasons": [
-            "Wust gate: trusted stakeholders with no private data need"
+            "Wust gate: shared ledger requirement met",
+            "Wust gate: multiple writers detected",
+            "Wust gate: untrusted stakeholders or private data need"
         ],
         "stageSummaries": [
-            "Stage 1 (Wust gate): FAIL",
-            "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
-            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
+            "Stage 1 (Wust gate): PASS",
+            "Stage 2 (Context): externalInteraction=true, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=42, suitability=PARTIALLY_SUITABLE, blockchain=Consortium Blockchain"
         ],
-        "reasons": []
+        "reasons": [
+            "External interaction detected (weight=0.14)",
+            "Cross-organization flow context (weight=0.14)",
+            "External data flow context (weight=0.14)"
+        ]
     },
     {
         "serviceId": "b210868a-cf5c-4157-b86e-b21d426d3851",
@@ -117,39 +129,51 @@
         "serviceId": "0a7a1082-affb-4bc8-bfb1-91f073d72dde",
         "serviceName": "Enters the medical record ID",
         "serviceType": "xpdl:activity",
-        "suitability": "NOT_SUITABLE",
-        "score": 0,
-        "hardGatePassed": false,
-        "executionMode": "OFF_CHAIN",
-        "recommendedBlockchain": "Not applicable",
+        "suitability": "PARTIALLY_SUITABLE",
+        "score": 42,
+        "hardGatePassed": true,
+        "executionMode": "HYBRID",
+        "recommendedBlockchain": "Consortium Blockchain",
         "gateReasons": [
-            "Wust gate: trusted stakeholders with no private data need"
+            "Wust gate: shared ledger requirement met",
+            "Wust gate: multiple writers detected",
+            "Wust gate: untrusted stakeholders or private data need"
         ],
         "stageSummaries": [
-            "Stage 1 (Wust gate): FAIL",
-            "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
-            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
+            "Stage 1 (Wust gate): PASS",
+            "Stage 2 (Context): externalInteraction=true, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=42, suitability=PARTIALLY_SUITABLE, blockchain=Consortium Blockchain"
         ],
-        "reasons": []
+        "reasons": [
+            "External interaction detected (weight=0.14)",
+            "Cross-organization flow context (weight=0.14)",
+            "External data flow context (weight=0.14)"
+        ]
     },
     {
         "serviceId": "082521f7-2373-493e-b116-ed46f8443646",
         "serviceName": "Searches for patient data in the Registration and Patient database",
         "serviceType": "xpdl:activity",
-        "suitability": "NOT_SUITABLE",
-        "score": 0,
-        "hardGatePassed": false,
-        "executionMode": "OFF_CHAIN",
-        "recommendedBlockchain": "Not applicable",
+        "suitability": "PARTIALLY_SUITABLE",
+        "score": 42,
+        "hardGatePassed": true,
+        "executionMode": "HYBRID",
+        "recommendedBlockchain": "Consortium Blockchain",
         "gateReasons": [
-            "Wust gate: trusted stakeholders with no private data need"
+            "Wust gate: shared ledger requirement met",
+            "Wust gate: multiple writers detected",
+            "Wust gate: untrusted stakeholders or private data need"
         ],
         "stageSummaries": [
-            "Stage 1 (Wust gate): FAIL",
-            "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
-            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
+            "Stage 1 (Wust gate): PASS",
+            "Stage 2 (Context): externalInteraction=true, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=42, suitability=PARTIALLY_SUITABLE, blockchain=Consortium Blockchain"
         ],
-        "reasons": []
+        "reasons": [
+            "External interaction detected (weight=0.14)",
+            "Cross-organization flow context (weight=0.14)",
+            "External data flow context (weight=0.14)"
+        ]
     },
     {
         "serviceId": "8a71f31d-70b3-48c5-bc2c-eea96af4d56f",
@@ -212,20 +236,26 @@
         "serviceId": "778fd50a-2f20-4db3-9a8b-ea705dc632c1",
         "serviceName": "Includes the purpose of referral, medical information ",
         "serviceType": "xpdl:activity",
-        "suitability": "NOT_SUITABLE",
-        "score": 0,
-        "hardGatePassed": false,
-        "executionMode": "OFF_CHAIN",
-        "recommendedBlockchain": "Not applicable",
+        "suitability": "PARTIALLY_SUITABLE",
+        "score": 42,
+        "hardGatePassed": true,
+        "executionMode": "HYBRID",
+        "recommendedBlockchain": "Consortium Blockchain",
         "gateReasons": [
-            "Wust gate: trusted stakeholders with no private data need"
+            "Wust gate: shared ledger requirement met",
+            "Wust gate: multiple writers detected",
+            "Wust gate: untrusted stakeholders or private data need"
         ],
         "stageSummaries": [
-            "Stage 1 (Wust gate): FAIL",
-            "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
-            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
+            "Stage 1 (Wust gate): PASS",
+            "Stage 2 (Context): externalInteraction=true, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=42, suitability=PARTIALLY_SUITABLE, blockchain=Consortium Blockchain"
         ],
-        "reasons": []
+        "reasons": [
+            "External interaction detected (weight=0.14)",
+            "Cross-organization flow context (weight=0.14)",
+            "External data flow context (weight=0.14)"
+        ]
     },
     {
         "serviceId": "c6815450-54fd-4592-9eeb-601519bfbf6e",
@@ -269,20 +299,26 @@
         "serviceId": "9c963f34-35a8-4ab8-94a1-4defe8d8b156",
         "serviceName": "Saves the referral information ",
         "serviceType": "xpdl:activity",
-        "suitability": "NOT_SUITABLE",
-        "score": 0,
-        "hardGatePassed": false,
-        "executionMode": "OFF_CHAIN",
-        "recommendedBlockchain": "Not applicable",
+        "suitability": "PARTIALLY_SUITABLE",
+        "score": 42,
+        "hardGatePassed": true,
+        "executionMode": "HYBRID",
+        "recommendedBlockchain": "Consortium Blockchain",
         "gateReasons": [
-            "Wust gate: trusted stakeholders with no private data need"
+            "Wust gate: shared ledger requirement met",
+            "Wust gate: multiple writers detected",
+            "Wust gate: untrusted stakeholders or private data need"
         ],
         "stageSummaries": [
-            "Stage 1 (Wust gate): FAIL",
-            "Stage 2 (Context): externalInteraction=false, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
-            "Stage 3 (Scoring): score=0, suitability=NOT_SUITABLE, blockchain=Not applicable"
+            "Stage 1 (Wust gate): PASS",
+            "Stage 2 (Context): externalInteraction=true, crossOrganizationFlow=true, externalDataFlow=true, financialTask=false, approvalTask=false",
+            "Stage 3 (Scoring): score=42, suitability=PARTIALLY_SUITABLE, blockchain=Consortium Blockchain"
         ],
-        "reasons": []
+        "reasons": [
+            "External interaction detected (weight=0.14)",
+            "Cross-organization flow context (weight=0.14)",
+            "External data flow context (weight=0.14)"
+        ]
     },
     {
         "serviceId": "6fe753e9-ea2f-4694-a19f-d7585b540d01",
