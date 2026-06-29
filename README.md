@@ -1,89 +1,179 @@
 # BPMN Blockchain Analyzer
 
-## Project Overview
+## What this project does
 
-This project analyzes BPMN process models and produces blockchain suitability recommendations for each BPMN node.
-It evaluates nodes based on Wust-style shared-ledger criteria and a soft scoring model.
+This application reads a process diagram file, converts it into a simple workflow graph, and evaluates whether each task or decision node could be a good fit for blockchain.
 
-## What was fixed
+It is not a full BPMN engine. Instead, it uses patterns from the diagram and node descriptions to decide whether a node looks like:
 
-### 1. Parser improvements
-- The BPMN parser now recognizes additional BPMN node types:
-  - `bpmn:sendTask`
-  - `bpmn:receiveTask`
-- It continues to parse:
-  - `bpmn:userTask`
-  - `bpmn:serviceTask`
-  - `bpmn:manualTask`
-  - `bpmn:exclusiveGateway`
-  - `bpmn:parallelGateway`
-  - `bpmn:startEvent`
-  - `bpmn:endEvent`
+- shared data between multiple parties,
+- a cross-organization workflow,
+- a private or sensitive data transfer,
+- or a transaction/approval step.
 
-### 2. Better BPMN flow inference
-- Added support for `bpmn:messageFlow` relationships.
-- Message-flow-connected nodes now infer:
-  - `externalDataFlow = true`
-  - `crossOrganizationFlow = true`
-- Participant lanes (`bpmn:lane` / `bpmn:flowNodeRef`) are parsed and used to detect cross-organization flows when connected nodes belong to different lanes.
+The output is a JSON list of recommendations with:
 
-### 3. Node-level determination of the Wust gate
-- Fixed the hard-gate evaluation so each node is judged by its own flags instead of graph-level context.
-- This avoids incorrect cases where one external node made all nodes pass the shared-ledger gate.
+- `suitability` (NOT_SUITABLE, PARTIALLY_SUITABLE, or BLOCKCHAIN_SUITABLE)
+- `score`
+- `recommendedBlockchain`
+- `executionMode`
+- reasons why the node passed or failed the gate
 
-### 4. Context heuristics and soft scoring
-- Node name heuristics now detect common blockchain-relevant signals:
-  - customer, supplier, order, delivery, shipment, payment, invoice, billing, message, send, receive
-- Soft scoring still uses equal AHP weights for all criteria.
-- Current thresholds are:
-  - `NOT_SUITABLE` if score < 40
-  - `PARTIALLY_SUITABLE` if 40 ≤ score < 70
-  - `BLOCKCHAIN_SUITABLE` if score ≥ 70
+## How the code works
 
-## Key files
+### 1. File parsing
 
-- `src/main/java/com/blockchain/analyzer/parser/BPMNParser.java`
-  - BPMN XML parsing and flag inference logic
-- `src/main/java/com/blockchain/analyzer/blockchain/scoring/BlockchainScoringEngine.java`
-  - Wust gate logic and scoring model
-- `output-from-bpmn.json`
-  - Example analyzer output for the provided BPMN file
+The app accepts uploaded XML files through the `/api/blockchain/analyze` endpoint.
+The uploaded file is read as a string and passed to `BPMNParser.parse(...)`.
 
-## How to run
+### 2. BPMN vs XPDL detection
 
-On Windows:
+`BPMNParser` checks the XML root element:
+
+- if the root is `Package`, the file is treated as XPDL,
+- otherwise the file is treated as BPMN XML.
+
+For XPDL, the parser currently extracts:
+
+- `Activity` elements as workflow nodes,
+- `Transition` elements as sequence flows,
+- `Pool` → `WorkflowProcess` links to capture participant names,
+- whether a `WorkflowProcess` uses `DataStoreReference` or `DataAssociation` to mark external/cross-organization flow.
+
+For BPMN XML, the parser extracts:
+
+- user task, service task, manual task, send task, receive task,
+- exclusive and parallel gateways,
+- start and end events,
+- message flows,
+- sequence flows,
+- lanes and flow node references to detect different participants.
+
+### 3. Node enrichment
+
+Each node is enriched by `BPMNParser.enrichNode(...)`.
+That method examines the node name and type and sets boolean flags such as:
+
+- `approvalTask`
+- `financialTask`
+- `externalInteraction`
+- `externalDataFlow`
+- `crossOrganizationFlow`
+
+For example, names containing `send`, `receive`, `order`, `payment`, `patient`, or `referral` can make a node look like it crosses organizations or involves external interaction.
+
+### 4. Flow inference
+
+After parsing, `inferFlowFlags(...)` updates nodes based on connections:
+
+- if a node has a `messageFlow` connection, it is marked as external data flow and cross-organization flow,
+- if two nodes connected by a message flow belong to different participant lanes, both are marked as cross-organization.
+
+### 5. Scoring and suitability
+
+`BlockchainScoringEngine.evaluate(...)` applies a two-stage decision:
+
+#### WUST hard gate
+
+The node must satisfy:
+
+- shared ledger requirement: `externalDataFlow` or `crossOrganizationFlow`,
+- multiple writers: `crossOrganizationFlow`,
+- untrusted stakeholders or private data: `externalInteraction` or sensitive node name.
+
+If the node fails this gate, it is marked `NOT_SUITABLE` and the recommended blockchain is `Not applicable`.
+
+#### Soft scoring
+
+If the gate passes, the engine computes a score from criteria including:
+
+- financial process,
+- external interaction,
+- approval workflow,
+- service automation,
+- decision workflow,
+- cross-organization flow,
+- external data flow.
+
+Then suitability is assigned as:
+
+- `BLOCKCHAIN_SUITABLE` if score ≥ 70,
+- `PARTIALLY_SUITABLE` if 40 ≤ score < 70,
+- `NOT_SUITABLE` otherwise.
+
+### 6. Recommendation output
+
+The controller returns JSON with one recommendation per graph node.
+Example fields include:
+
+- `serviceId`
+- `serviceName`
+- `score`
+- `suitability`
+- `recommendedBlockchain`
+- `executionMode`
+- `gateReasons`
+- `reasons`
+
+## Why a diagram may still show `NOT_SUITABLE`
+
+If your process is not detected as having:
+
+- cross-organization flow,
+- external data flow,
+- external stakeholders, or
+- private/sensitive data,
+
+then the WUST gate will fail and the node becomes `NOT_SUITABLE`.
+
+The current parser is heuristic-based, so it may miss cases that are clearly business-relevant but do not use the exact keywords or XPDL structure it expects.
+
+## How to use it
+
+### Run locally
 
 ```powershell
 cd d:\Thopaz\Kuliah\KP\BPMN\bpmn-blockchain-analyzer
-./mvnw.cmd test
+./mvnw.cmd clean package
 ./mvnw.cmd spring-boot:run
 ```
 
-The API controller accepts BPMN XML upload and returns JSON recommendations.
+### Upload a file
 
-## Current recommendation status
+Use the endpoint:
 
-- The analyzer now generates more accurate gate decisions by relying on node-level context.
-- `output-from-bpmn.json` shows the current results, but the model still depends on parser heuristics.
+```
+POST /api/blockchain/analyze
+Content-Type: multipart/form-data
+file=@your-diagram.bpmn
+```
 
-## Next recommended improvements
+The file can be a BPMN XML file or an XPDL file.
 
-1. Improve BPMN semantics support
-   - Parse `bpmn:participant`, `bpmn:collaboration`, `bpmn:dataObject`, and data associations.
-   - Add better participant/participant boundary detection.
+### Local test example with curl
 
-2. Strengthen graph-level context only where appropriate
-   - Use graph context for summarizing the model, not for node-level gate passes.
+```powershell
+curl -F "file=@\"d:\Thopaz\Kuliah\KP\BPMN\bpmn-blockchain-analyzer\Diagram 1.xpdl\"" http://localhost:8080/api/blockchain/analyze
+```
 
-3. Tune the scoring model
-   - If you want domain-specific behavior, adjust AHP weights and thresholds.
-   - Example: increase weight for `CROSS_ORGANIZATION_FLOW` and `EXTERNAL_DATA_FLOW`.
+## What changed recently
 
-4. Add regression tests
-   - Create BPMN tests for message flow, participant lanes, and expected suitability outputs.
+### XPDL support
 
-## Notes
+- The parser now detects XPDL's root `Package` element.
+- It pulls nodes from `Activity` and edges from `Transition`.
+- It uses pool/process linkage to infer participant names and external data flow.
 
-- The fixed logic is now based on the actual BPMN node qualities inferred from task names and message flows.
-- The current `AHP_PAIRWISE` matrix uses equal weights; that is acceptable for an initial model.
-- Final validation should use your actual BPMN XML and confirm whether node suitability matches your business expectations.
+### Healthcare/referral heuristics
+
+- Node names containing `patient`, `referral`, `hospital`, `clinic`, `medical`, or `registration` are now treated as sensitive or external interaction signals.
+- This makes the WUST gate more likely to recognize referral scenarios as potentially blockchain-relevant.
+
+## What to improve next
+
+If you want better accuracy, the next steps are:
+
+1. Add proper XPDL lane/Activity/DataAssociation parsing,
+2. Map actual data stores and associations to the nodes that use them,
+3. Add more test cases for real BPMN/XPDL diagrams,
+4. Tune the scoring weights or thresholds for your business domain.
